@@ -36,52 +36,40 @@ Le serveur sert les fichiers avec compression (l'index de recherche fait
 | noms propres indexés | 740 |
 | entrées du dictionnaire des symboles | 90 |
 | entrées d'autorité (8 catégories) | 188 |
-| pages écartées (astrologie, musique, échecs, stats) | 84 |
+| pages écartées (astrologie, musique, échecs, stats) | 88 |
 
 ## Architecture du site
 
+Depuis le 24 octobre 2026 (étapes 13 et 14), le site se lit comme l'original :
+les pages de l'auteur sont la lecture, sans réécriture.
+
 ```
 site/
-  index.html            portail : sa page d'accueil d'origine, le plan, les index
-  original/accueil.html sa page d'accueil, telle qu'elle était
-  liseuse.html          liseuse : sommaire, typographie, taille, thème, PDF, HTML, TXT
-  pdf/                  dix livres PDF, un par section
-  plan.html             plan établi par l'auteur, complété
-  sections/<id>.html    les 10 sections
-  articles/<slug>.html  article lisible (sommaire, illustrations, renvois,
-                        ancres #pN une par paragraphe)
-  original/<slug>.html  réplique de la page archivée
-  index-general.html    index alphabétique des 247 articles
-  noms.html + noms/     index des noms propres et fiches de contexte
-  symboles.html         dictionnaire des symboles (ancres d'origine)
-  axes.html + axes/     index d'autorité : 8 catégories, 188 entrées
-  illustrations.html    les planches, page par page
-  textes.html           les traités transcrits
-  mots.html             index des mots du corpus
-  guide.html            tous les index
-  notions.html          index analytique (188 entrées, localisateurs)
-  mots/<lettre>.html    concordance complète (62 580 formes)
-  parcours.html         dossiers de lecture
-  recherche.html        moteur (interface)
-  moteur.js             moteur (chargement, analyse, BM25, facettes)
-  notice.html           notice sur l'auteur, droits, provenance
+  index.html            écran titre : « La clef du labyrinthe hermétique »
+                        (réplique d'intro-alchimie, chemins ramenés à la racine)
+  original/<slug>.html  les 248 pages de l'auteur, markup archivé ; liens et
+                        images rendus locaux ; une barre de lecture en tête
+  barre.js, barre.css   barre de lecture : précédent et suivant dans l'ordre du
+                        plan, taille (60 à 250 %), police, colonne, modes
+                        original, noir et blanc, nuit, loupe et visionneuse des
+                        planches, PDF de la page, EPUB de la page, PDF de la
+                        section ; #passage=<mots> ouvre la page au passage cité
+  sommaire.html         les 247 pages dans l'ordre du plan : révision,
+                        caractères, images, date et lien de la capture
+  sections/<id>.html    une section du plan, même tableau, PDF de la section
+  recherche.html        moteur (interface) ; moteur.js : BM25, facettes
+  symboles.html         dictionnaire des symboles de l'auteur
+  notice.html           provenance, fidélité, droits
   lacunes.html          pages perdues, retrouvées, adresses renommées
-  method.html           méthode, sources, limites
-  data/search/          index éclaté
-  data/axes.json        axes d'autorité (filtres du moteur)
+  hors-perimetre.html   pages écartées
+  pdf/                  dix livres PDF, un par section
+  data/search/          index éclaté ; data/nav.json : ordre du plan
+  articles/<slug>.html  anciennes adresses, renvoi vers original/<slug>.html
 ```
 
-Chaque page porte la même barre de navigation ; les articles ont un fil
-d'Ariane, une navigation précédent/suivant dans leur section, des articles
-liés et les noms cités. `08_verify.py` contrôle cette architecture :
-**160 297 liens internes, 0 mort, 0 ancre cassée, 0 page orpheline,
-0 image manquante** sur 1 493 pages.
-
-La **liseuse** (`liseuse.html?p=<article>`) reprend le texte et les planches
-de chaque article : sommaire, taille du texte, trois typographies, quatre
-fonds, impression ou enregistrement en PDF, export HTML autonome et TXT.
-Les **dix livres PDF** de `site/pdf/` reprennent chaque section du plan avec
-ses illustrations et la référence de capture de chaque pièce.
+Pages retirées le 24 octobre 2026 et remplacées par un renvoi au sommaire :
+portail, plan, guide, index alphabétique, index des mots, index des noms,
+axes, notions, dossiers, méthode, liseuse, textes, illustrations.
 
 ## Publier sur GitHub
 
@@ -126,12 +114,11 @@ visant un texte précis, 11 le placent en tête et 15 dans les dix premiers
 l'article qui les contient. Requête type : 20 à 300 ms, 1 à 4 fragments
 chargés.
 
-Fonctions de l'interface : suggestions (mots, noms, sections), mode question
-avec thésaurus alchimique (mercure/vif-argent, rebis/androgyne, nigredo/
-corbeau…), facettes calculées sur les résultats (sections, nature, articles
+Fonctions de l'interface : suggestions (mots, noms, sections), facettes calculées sur les résultats (sections, nature, articles
 illustrés), **filtres par axes d'autorité** (OU dans une catégorie, ET entre
 catégories), tri (pertinence, titre, longueur, date d'archivage), trois
-extraits par article avec **renvoi au paragraphe exact** (`#pN`), export CSV,
+extraits par article avec renvoi au passage dans la page de l'auteur
+(`#passage=`), export CSV,
 état dans l'URL, raccourci `/`.
 
 ## Les axes d'autorité
@@ -161,7 +148,11 @@ python 09_recover.py      # pages perdues : autres archives et services
 python 10_axes.py         # index d'autorité, notions, concordance, planches
 python 11_portail.py      # portail, guide des index, dossiers de lecture
 python 12_pdf.py          # dix livres PDF dans site/pdf/
+python 13_lecture.py      # lecture sur les pages de l'auteur, sommaire, sections
+python 14_pages.py        # notice, pages perdues, pages écartées, symboles, 404
 ```
+
+Les étapes 13 et 14 tournent sur `site/` seul, sans le corpus intermédiaire.
 
 Chaque étape est idempotente et reprend où elle s'est arrêtée (`cache/`).
 L'ordre compte : `06` reconstruit `site/`, donc `07` et `10` doivent suivre.
@@ -240,8 +231,7 @@ la page était déjà morte chez l'hébergeur au moment de l'archivage. Détail 
 
 ## Limites
 
-- La recherche est lexicale (BM25 sur passages, préfixes, fautes de frappe,
-  thésaurus) : elle rapproche les formes, pas les idées.
+- La recherche est lexicale (BM25 sur passages, préfixes, fautes de frappe) : elle rapproche les formes, pas les idées.
 - Les axes sont un repérage lexical : ils trouvent les mentions, pas les
   analyses implicites.
 - Certaines pages ne sont conservées que partiellement, et les images

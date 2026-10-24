@@ -2,28 +2,16 @@
 <html lang="fr"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Recherche — Hervé Delboy, alchimie</title>
-<link rel="stylesheet" href="style.css">
-</head><body>
-<header class="topbar">
-  <a class="brand" href="index.html">Hervé Delboy<span> — alchimie</span></a>
-  <nav>
-    <a href="plan.html">Plan</a>
-    <a href="guide.html">Index</a>
-    <a href="recherche.html">Recherche</a>
-    <a href="mots.html">Mots</a>
-    <a href="parcours.html">Dossiers</a>
-    <a href="method.html">Méthode</a>
-  </nav>
-</header>
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="barre.css"><script src="barre.js" defer></script>
+</head><body class="ui">
+<div class="replica-note"><a href="index.html">Hervé Delboy — alchimie</a> · <a href="sommaire.html">Sommaire</a> · <a href="recherche.html">Recherche</a> · <a href="notice.html">Notice</a></div>
 <main>
   <h1>Recherche</h1>
-  <p class="lead">18 000 passages, 25 millions de caractères, 247 pages.
-  Mots, expressions, noms, formules ou questions entières : le moteur
-  interroge les textes, pas seulement les titres.</p>
+  <p class="facts">18 427 passages · 247 pages</p>
 
   <form id="form" class="searchbox" role="search" autocomplete="off">
     <div class="searchwrap">
-      <input id="q" name="q" placeholder="mercure philosophique · Atalanta fugiens · qu’est-ce que le rebis ?"
+      <input id="q" name="q" placeholder="mercure philosophique · &quot;pierre philosophale&quot; · titre:toyson"
              aria-label="Rechercher dans le corpus" autocomplete="off" spellcheck="false">
       <div id="sugg" class="sugg" role="listbox" hidden></div>
     </div>
@@ -31,7 +19,7 @@
   </form>
 
   <div class="toolbar">
-    <label class="chk"><input type="checkbox" id="qmode"> mode question <span class="dim">(élargit au thésaurus)</span></label>
+    <input type="checkbox" id="qmode" hidden>
     <label class="dim">trier
       <select id="sort">
         <option value="pert">pertinence</option>
@@ -85,18 +73,11 @@
     <section class="results" id="results"></section>
   </div>
 </main>
-<footer class="foot">
-  <p class="rights">© Hervé Delboy et ayants droit —
-  <span class="url">perso.club-internet.fr/hdelboy</span>, puis
-  <span class="url">herve.delboy.perso.sfr.fr</span> (site disparu).
-  Reproduction à des fins de consultation, de recherche et de conservation ;
-  aucune exploitation commerciale. Tous droits réservés aux auteurs et à
-  leurs ayants droit.</p>
-  <p><a href="notice.html">Notice, droits et provenance</a> ·
-  <a href="method.html">Méthode et sources</a> ·
-  <a href="lacunes.html">Pages perdues</a> ·
-  <a href="guide.html">Tous les index</a></p>
-</footer>
+<footer class="foot"><p>© Hervé Delboy et ayants droit.
+Site d'origine : perso.club-internet.fr/hdelboy, puis herve.delboy.perso.sfr.fr
+(disparu). Reproduction à des fins de consultation, de recherche et de
+conservation ; aucune exploitation commerciale. Tous droits réservés aux
+auteurs et à leurs ayants droit. <a href="notice.html">Notice</a></p></footer>
 
 <script src="moteur.js"></script>
 <script>
@@ -107,6 +88,9 @@ const state = { q: "", mode: false, secs: new Set(), type: "tout",
 let NOMS = [];
 
 const esc = Moteur.esc;
+/* lien vers la page de l'auteur, au passage (fragment de texte) */
+const frag = t => { const w = String(t || "").replace(/\s+/g, " ").replace(/^[\s.,;:!?)\]»-]+/, "").trim().split(" ").slice(0, 6).join(" ");
+  return w ? "#passage=" + encodeURIComponent(w) : ""; };
 
 function sectionName(s){ return Moteur.sectionName(s); }
 
@@ -169,8 +153,7 @@ function suggest(q){
 
 function pick(el){
   const k = el.dataset.k, v = el.dataset.v, s = el.dataset.s;
-  if (k === "nom") location.href = "noms/" + s + ".html";
-  else if (k === "section"){ state.secs = new Set([s]); $("#q").value = ""; run(); }
+  if (k === "section"){ state.secs = new Set([s]); $("#q").value = ""; run(); }
   else { $("#q").value = v; $("#sugg").hidden = true; state.page = 1; run(); }
 }
 
@@ -209,8 +192,7 @@ function buildAxes(A){
       `<option value="${e.id}">${esc(e.label)} (${e.n})</option>`).join("") +
       `</optgroup>`;
   }
-  h += `</select><div id="axchips" class="chips axchips"></div>
-    <p class="dim"><a href="axes.html">tous les axes</a></p></div>`;
+  h += `</select><div id="axchips" class="chips axchips"></div></div>`;
   $("#axesbox").innerHTML = h;
   $("#axsel").onchange = e => {
     if (!e.target.value) return;
@@ -389,7 +371,7 @@ async function renderResults(R){
         <span class="src">Réponse la plus proche — ${esc(Moteur.meta.docs[best.doc].t)}</span>
         <p class="answer">${Moteur.highlight(best.text, rawWords)}</p>
         <p class="dim">${best.heading ? "« " + esc(best.heading) + " » — " : ""}
-        <a href="articles/${Moteur.meta.docs[best.doc].s}.html#p${best.para}">lire le passage dans l’article</a></p>
+        <a href="original/${Moteur.meta.docs[best.doc].s}.html${frag(best.text)}">passage</a></p>
       </div>`;
     }
   }
@@ -400,15 +382,14 @@ async function renderResults(R){
     const pass = pids3.map(pid => Moteur.passage(pid)).filter(Boolean);
     const snips = pass.map(p => `<p class="mpass">${Moteur.highlight(
       Moteur.snippet(p.t, rawWords, 320), rawWords)}
-      <a class="jump" href="articles/${d.s}.html#p${p.p}">↧ situer</a></p>`).join("");
+      <a class="jump" href="original/${d.s}.html${frag(p.t)}">passage</a></p>`).join("");
     return `<div class="result">
-      <span class="src">${esc(sectionName(d.sec))}${d.type === "texte" ? " · texte ancien" : ""}</span>
-      <h3><a href="articles/${d.s}.html">${Moteur.highlight(d.t, rawWords)}</a></h3>
+      <span class="src">${esc(sectionName(d.sec))}</span>
+      <h3><a href="original/${d.s}.html">${Moteur.highlight(d.t, rawWords)}</a></h3>
       ${snips}
-      <p class="dim">${v.hits ? `${v.hits} passage${v.hits > 1 ? "s" : ""} pertinent${v.hits > 1 ? "s" : ""}` : "article correspondant"}
+      <p class="dim">${v.hits ? `${v.hits} passage${v.hits > 1 ? "s" : ""}` : "titre"}
         · <code>${esc(d.k)}</code> · ${(d.c / 1000).toFixed(0)} k car. · ${d.img} ill.
-        · <a href="articles/${d.s}.html">lire</a>
-        · <a href="original/${d.s}.html">réplique</a></p>
+</p>
     </div>`;
   }).join("");
 
@@ -466,43 +447,17 @@ function intro(){
     state.secs = new Set([cb.dataset.sec]); state.page = 1; run();
   });
 
-  const ex = ["mercure", "pierre philosophale", "putréfaction", "antimoine",
-    "Atalanta fugiens", "Douze Clefs", "Nicolas Flamel", "Paracelse", "vitriol",
-    "athanor", "rebis", "or potable", "toyson", "Cyliani"];
-  const q = (t) => `recherche.html?q=${encodeURIComponent(t)}`;
   $("#results").innerHTML = `
-    <div class="result">
-      <h3>Entrer par un mot</h3>
-      <p class="chips">${ex.map(t => `<a class="chip" href="${q(t)}">${esc(t)}</a>`).join("")}</p>
-    </div>
-    <div class="result">
-      <h3>Entrer par une question</h3>
-      <p class="chips">
-        <a class="chip" href="recherche.html?q=${encodeURIComponent("qu’est-ce que le rebis")}&mode=question">qu’est-ce que le rebis ?</a>
-        <a class="chip" href="recherche.html?q=${encodeURIComponent("comment distiller l’eau de vie")}&mode=question">comment distiller l’eau de vie ?</a>
-        <a class="chip" href="recherche.html?q=${encodeURIComponent("pourquoi le corbeau est-il noir")}&mode=question">pourquoi le corbeau est-il noir ?</a>
-        <a class="chip" href="recherche.html?q=${encodeURIComponent("Chevreul et l’alchimie")}&mode=question">Chevreul et l’alchimie</a>
-      </p>
-    </div>
-    <div class="result">
-      <h3>Autres axes de consultation</h3>
-      <p class="chips">
-        <a class="chip" href="plan.html">plan de l’auteur</a>
-        <a class="chip" href="index-general.html">index alphabétique</a>
-        <a class="chip" href="mots.html">index des mots</a>
-        <a class="chip" href="noms.html">index des noms</a>
-        <a class="chip" href="symboles.html">dictionnaire des symboles</a>
-      </p>
-    </div>
-    <div class="result">
-      <h3>Ce que le moteur sait faire</h3>
-      <p class="dim">Expression exacte <code>"…"</code>, termes obligatoires
-      <code>+mot</code>, exclusions <code>-mot</code>, préfixes
-      <code>philosoph*</code>, fautes de frappe <code>mercur~</code>,
-      champs <code>titre:</code> <code>section:</code> <code>fichier:</code>.
-      Le mode question élargit aux équivalents alchimiques (vif-argent pour
-      mercure, androgyne pour rebis…).</p>
-    </div>`;
+    <table class="data"><tr><th>Syntaxe</th><th>Effet</th></tr>
+    <tr><td><code>mercure soufre</code></td><td>l’un ou l’autre, classés par pertinence (BM25)</td></tr>
+    <tr><td><code>"pierre philosophale"</code></td><td>expression exacte</td></tr>
+    <tr><td><code>+soufre +antimoine</code></td><td>les deux termes dans le même passage</td></tr>
+    <tr><td><code>-astrologie</code></td><td>exclusion</td></tr>
+    <tr><td><code>philosoph*</code></td><td>préfixe</td></tr>
+    <tr><td><code>mercur~</code></td><td>une lettre d’écart</td></tr>
+    <tr><td><code>titre:toyson</code></td><td>titre de la page</td></tr>
+    <tr><td><code>section:DC</code></td><td>section du plan</td></tr>
+    <tr><td><code>fichier:toyson</code></td><td>nom du fichier d’origine</td></tr></table>`;
 }
 
 $("#form").addEventListener("submit", e => {
@@ -538,7 +493,7 @@ $("#export").addEventListener("click", async () => {
       const p = v.top.length ? Moteur.passage(v.top[0]) : null;
     lines.push([clean(d.t), clean(sectionName(d.sec)), v.hits, d.c,
       clean(location.origin + location.pathname.replace(/[^/]*$/, "") +
-        "articles/" + d.s + ".html"),
+        "original/" + d.s + ".html"),
       clean(p ? p.t.slice(0, 300) : "")].join(";"));
   }
   const blob = new Blob(["\ufeff" + lines.join("\r\n")],

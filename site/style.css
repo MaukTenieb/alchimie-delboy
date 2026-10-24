@@ -1,6 +1,7 @@
 :root{
-  --paper:#faf6ee; --paper2:#f2ece0; --ink:#241f18; --ink2:#544a3c;
-  --rule:#d9cfbc; --accent:#7b2d1c; --accent2:#9c6b3f; --gold:#b98b3d;
+  --paper:#fbfaf7; --paper2:#f1eee7; --ink:#1c1a17; --ink2:#6f675c;
+  --rule:rgba(28,26,23,.12); --accent:#8a2b16; --accent2:#9c6b3f; --gold:#a8834a;
+  --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",sans-serif;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -301,3 +302,42 @@ toolbar select, .toolbar select{font:inherit; font-size:.85rem; padding:.15rem .
 .foot .rights{color:var(--ink2); max-width:62rem}
 .foot .url{font-family:ui-monospace,Consolas,monospace; font-size:.95em;
   white-space:nowrap}
+
+/* ------------------------------------------------- sommaire, tableaux */
+.facts{color:var(--ink2); font-size:.92rem; margin:.2em 0 1em}
+.toc{columns:2; font-size:.95rem; padding-left:1.4em}
+.toc .n{color:var(--ink2); font-size:.85em}
+table.data{border-collapse:collapse; width:100%; font-size:.9rem; margin:0 0 1.5em}
+table.data th{text-align:left; font-weight:600; color:var(--ink2); border-bottom:2px solid var(--rule); padding:.3em .5em; white-space:nowrap}
+table.data td{border-bottom:1px solid var(--rule); padding:.3em .5em; vertical-align:top}
+table.data .n{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
+table.data tr:hover td{background:var(--paper2)}
+.foot{max-width:74rem; margin:0 auto; padding:1rem 1.4rem 3rem; font-size:.8rem; color:var(--ink2); border-top:1px solid var(--rule)}
+@media(max-width:700px){.toc{columns:1} table.data{font-size:.8rem}}
+
+
+/* ------------------------------------------------- 2026 : pages de consultation */
+body.ui{background:var(--paper); font:16px/1.6 "Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif; -webkit-font-smoothing:antialiased}
+body.ui .replica-note{margin:0}
+body.ui main{max-width:72rem; padding:3rem 1.6rem 4rem}
+body.ui h1{font-weight:500; font-size:2.4rem; letter-spacing:-.02em; margin:0 0 .35em}
+body.ui h2{font-weight:500; font-size:1.35rem; letter-spacing:-.01em; color:var(--ink); margin:2.6em 0 .2em; padding-top:.6em; border-top:1px solid var(--rule)}
+body.ui .facts,body.ui .crumb,body.ui table.data,body.ui .toc,body.ui .foot,body.ui .dim{font-family:var(--sans)}
+body.ui .facts{font-size:.85rem; color:var(--ink2); letter-spacing:.01em}
+body.ui .crumb{font-size:.8rem; text-transform:uppercase; letter-spacing:.08em}
+body.ui .toc{columns:2; column-gap:3rem; list-style:none; padding:0; margin:2rem 0; font-size:.95rem; counter-reset:t}
+body.ui .toc li{break-inside:avoid; display:flex; gap:.8rem; padding:.45rem 0; border-bottom:1px solid var(--rule); counter-increment:t}
+body.ui .toc li::before{content:counter(t,decimal-leading-zero); color:var(--ink2); font-variant-numeric:tabular-nums; font-size:.85em; padding-top:.1em}
+body.ui .toc li a{color:var(--ink); flex:1}
+body.ui .toc li a:hover{color:var(--accent); text-decoration:none}
+body.ui table.data{font-size:.86rem}
+body.ui table.data th{font-weight:500; font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--ink2); border-bottom:1px solid var(--ink)}
+body.ui table.data td{border-bottom:1px solid var(--rule); padding:.5em .6em}
+body.ui table.data td a{color:var(--ink)}
+body.ui table.data td a:hover{color:var(--accent); text-decoration:none}
+body.ui table.data tr:hover td{background:rgba(28,26,23,.03)}
+body.ui table.data td.n{color:var(--ink2)}
+body.ui .foot{max-width:72rem; font-size:.75rem; line-height:1.55; color:var(--ink2); border-top:1px solid var(--rule)}
+body.ui .bigsearch button,body.ui .btn{background:var(--ink); border-radius:10px; font-family:var(--sans)}
+@media(max-width:700px){body.ui .toc{columns:1} body.ui main{padding:2rem 1rem}}
+body.ui .toc{background:none;border:0;border-radius:0;padding:0}
