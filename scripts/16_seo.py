@@ -115,7 +115,7 @@ def main() -> None:
     # écran titre
     desc = ("Le site d'Hervé Delboy sur l'alchimie, années 2000, remis en ligne : 248 pages en dix sections, "
             "dont les Douze Clefs de philosophie, le Mutus Liber, l'Atalanta fugiens, le dictionnaire des "
-            "symboles alchimiques et les traités transcrits ; 3 017 planches, recherche en texte intégral, "
+            "symboles alchimiques et les traités transcrits ; 3 055 planches, recherche en texte intégral, "
             "dix livres PDF.")
     ld = {"@graph": [
         {**SITE_LD, "description": desc, "author": AUTHOR,
