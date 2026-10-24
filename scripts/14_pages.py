@@ -39,18 +39,6 @@ liens et les images, rendus locaux, et ajoute une barre de lecture en tête de p
 <p>Textes, transcriptions, traductions, notices, mises en page et images : l'œuvre
 d'Hervé Delboy et des auteurs qu'il citait, protégée par le droit d'auteur,
 propriété de leurs auteurs et de leurs ayants droit.</p>
-<p>Usage : consultation, recherche, conservation. Zéro vente, zéro publicité,
-zéro exploitation commerciale.</p>
-<p>La demande d'un auteur ou d'un ayant droit — retrait d'une page ou d'une image,
-correction d'une mention, précision d'un crédit — s'applique sans délai :
-mauktenieb chez Gmail.</p>
-<h2>Outils</h2>
-<p><a href="sommaire.html">Sommaire</a>, dans l'ordre du plan de l'auteur ·
-<a href="recherche.html">recherche</a> en texte intégral, avec renvoi au passage ·
-<a href="symboles.html">dictionnaire des symboles</a> de l'auteur · un PDF par section ·
-sur chaque page : page précédente et suivante, taille, police, colonne, modes nuit
-et noir et blanc, loupe et visionneuse des planches, lecture à voix haute,
-surlignages et notes, PDF, EPUB.</p>
 """
 
 
