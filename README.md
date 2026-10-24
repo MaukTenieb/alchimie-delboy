@@ -23,7 +23,20 @@ https://mauktenieb.github.io/alchimie-delboy/
 | mots indexés | 62 580 |
 | entrées du dictionnaire des symboles | 90 |
 | entrées du filtre « Domaines » de la recherche | 188 |
-| pages écartées (astrologie, musique, échecs, statistiques, pages personnelles) | 88 |
+| pages écartées (astrologie, musique, échecs, statistiques, pages personnelles) | 87 |
+
+## Corpus
+
+`site/corpus.html` : 140 textes alchimiques libres de droits, de Zosime à Cyliani, et 365 liens vers leurs copies numérisées gratuites. Les listes de départ sont Antoine Calvet, *L'Alchimie au Moyen Âge* (Vrin, 2018), Albert Poisson, *Théories et symboles des alchimistes* (1891), introduction, Michela Pereira (dir.), *Alchimia. I testi della tradizione occidentale* (Mondadori, 2006), et Françoise Bonardel (dir.), *Philosopher par le feu* (Seuil, 1995).
+
+| époque | textes |
+|---|---|
+| Antiquité grecque | 17 |
+| réception arabe, corpus arabo-latins | 24 |
+| alchimie latine, XIIIe-XVe siècle | 41 |
+| XVIe-XIXe siècle | 58 |
+
+Chaque fiche donne les éditions anciennes imprimées, dont les grands recueils (Berthelot et Ruelle, *Artis auriferae*, *Theatrum chemicum*, Manget, *Musaeum hermeticum*, *Bibliothèque des philosophes chimiques*), les copies numérisées, avec volume et pages, et les éditions critiques modernes en référence. Données : `corpus/corpus.json`. Le workflow `corpus-liens.yml` contrôle chaque lien le lundi et à chaque modification des données.
 
 ## Provenance
 
@@ -94,10 +107,11 @@ python 12_pdf.py          # anciens livres PDF, remplacés par l'étape 15
 python 13_lecture.py      # barre de lecture, sommaire, sections
 python 14_pages.py        # notice, pages manquantes, pages écartées, symboles, 404
 python 15_pdf.py          # dix livres PDF, imprimés par Chromium depuis les pages de l'auteur
+python 17_corpus.py       # corpus des textes libres de droits, avant l'étape 16
 python 16_seo.py          # titres, descriptions, données structurées, plan du site, llms.txt
 ```
 
-Les étapes 01 à 12 lisent le corpus intermédiaire ; 13 à 16 travaillent sur `site/` seul, dans cet ordre. Le périmètre part du plan de l'auteur (`plan_alchimie.htm`), suit ses liens internes et écarte l'astrologie, la musique, les échecs et les statistiques ; `FORCED_IN` et `FORCED_OUT` (`04_classify.py`) tranchent les cas limites.
+Les étapes 01 à 12 lisent le corpus intermédiaire ; 13, 14, 15, 17 et 16 travaillent sur `site/` seul, dans cet ordre. Le périmètre part du plan de l'auteur (`plan_alchimie.htm`), suit ses liens internes et écarte l'astrologie, la musique, les échecs et les statistiques ; `FORCED_IN` et `FORCED_OUT` (`04_classify.py`) tranchent les cas limites.
 
 ## Droits
 

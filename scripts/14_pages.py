@@ -18,8 +18,9 @@ NOTICE = """<h1>Notice</h1>
 <tr><th>Contenu</th><td><a href="sommaire.html">248 pages</a> sur l'alchimie, dix sections dans l'ordre de son plan · 3 017 images · dix livres PDF</td></tr>
 <tr><th>Adresses d'origine</th><td><code>perso.club-internet.fr/hdelboy</code>, 1999-2009 · <code>herve.delboy.perso.sfr.fr</code>, 2009-2016</td></tr>
 <tr><th>Source</th><td>Wayback Machine (Internet Archive), captures de 2001 à 2016 ; Common Crawl, une page</td></tr>
-<tr><th>Pages écartées</th><td><a href="hors-perimetre.html">88</a> : astrologie, musique, échecs, statistiques, pages personnelles</td></tr>
+<tr><th>Pages écartées</th><td><a href="hors-perimetre.html">87</a> : astrologie, musique, échecs, statistiques, pages personnelles</td></tr>
 <tr><th>Pages manquantes</th><td><a href="lacunes.html">21</a>, à retrouver</td></tr>
+<tr><th>Corpus</th><td><a href="corpus.html">textes alchimiques libres de droits</a>, de Zosime à Cyliani, avec leurs copies numérisées</td></tr>
 <tr><th>Interventions</th><td>encodage des caractères · liens et images en local · barre de lecture</td></tr>
 </table>
 """
@@ -59,9 +60,12 @@ def main() -> None:
          '<p class="facts">Une copie, un cache, une sauvegarde de l\'une de ces pages : mauktenieb chez Gmail.</p>' + ul)
     write("lacunes.html", "Pages manquantes — Hervé Delboy, alchimie", b)
 
-    b = main_of(os.path.join(SITE, "hors-perimetre.html"))
+    b = main_of(os.path.join(SITE, "hors-perimetre.html")).strip()
+    # gobineau.html, retrouvée et rangée dans la section Douze Clefs (24 oct. 2026)
+    b = re.sub(r"<li><code>gobineau\.html</code>.*?</li>", "", b)
+    ne = len(re.findall(r"<li>", re.search(r'<ul class="list mono">.*?</ul>', b, re.S).group(0)))
     b = re.sub(r'<p class="(?:lead|facts)">.*?</p>',
-               '<p class="facts">88 pages : astrologie (directions primaires, transits, statistiques), '
+               f'<p class="facts">{ne} pages : astrologie (directions primaires, transits, statistiques), '
                'musique, échecs, logiciels de statistiques, pages personnelles</p>', b, count=1, flags=re.S)
     b = re.sub(r"<h1>[^<]*</h1>", "<h1>Pages écartées</h1>", b, count=1)
     old = re.search(r"<!--manquantes-->(.*?)<!--/manquantes-->", b, re.S)
@@ -73,7 +77,7 @@ def main() -> None:
               "captures vides</p><ul class=\"list mono\">" + "".join(sorted(moved)) + "</ul><!--/manquantes-->")
     write("hors-perimetre.html", "Pages écartées — Hervé Delboy, alchimie", b)
 
-    b = main_of(os.path.join(SITE, "symboles.html"))
+    b = main_of(os.path.join(SITE, "symboles.html")).strip()
     b = re.sub(r'<p class="(?:lead|facts)">.*?</p>',
                '<p class="facts">90 entrées · source : '
                '<a href="original/symboles-alchimiques.html">symboles alchimiques</a></p>',

@@ -133,6 +133,9 @@ def main() -> None:
         block("Introduction à l'alchimie — Hervé Delboy", desc, BASE, "website"))
 
     # pages de consultation
+    cj = json.load(open(os.path.join(ROOT, "corpus", "corpus.json"), encoding="utf-8"))
+    NC = len(cj)
+    NL = sum(len(t.get("copies") or []) for t in cj)
     con = {
         "sommaire.html": ("Sommaire — " + NAME,
                           "Les 248 pages d'Hervé Delboy sur l'alchimie dans l'ordre de son plan, en dix sections : "
@@ -149,6 +152,9 @@ def main() -> None:
         "lacunes.html": ("Pages manquantes — " + NAME,
                          "Pages manquantes du site d'Hervé Delboy sur l'alchimie, à retrouver : 21 "
                          "noms de fichiers. Une copie ou un cache : mauktenieb chez Gmail."),
+        "corpus.html": ("Corpus alchimique libre de droits — " + NAME,
+                        f"Corpus de {NC} textes alchimiques libres de droits, de Zosime à Cyliani : éditions "
+                        f"anciennes et {NL} copies numérisées gratuites, d'après Calvet, Poisson, Pereira et Bonardel."),
         "hors-perimetre.html": ("Pages écartées — " + NAME,
                                 "Pages du site d'Hervé Delboy hors alchimie : astrologie, musique, échecs, "
                                 "logiciels de statistiques, pages personnelles."),
@@ -197,7 +203,8 @@ def main() -> None:
              "Wayback Machine : 248 pages en dix sections, dans l'ordre de son plan. Textes et images : © Hervé Delboy.",
              "", f"- [Écran titre : La clef du labyrinthe hermétique]({BASE})",
              f"- [Sommaire]({BASE}sommaire.html)", f"- [Recherche]({BASE}recherche.html)",
-             f"- [Dictionnaire des symboles alchimiques]({BASE}symboles.html)", f"- [Notice]({BASE}notice.html)", ""]
+             f"- [Dictionnaire des symboles alchimiques]({BASE}symboles.html)", f"- [Notice]({BASE}notice.html)",
+             f"- [Corpus alchimique libre de droits : {NC} textes, {NL} copies numérisées]({BASE}corpus.html)", ""]
     for sid, (label, pdf, size) in secs.items():
         lines.append(f"## {label}")
         lines.append("")

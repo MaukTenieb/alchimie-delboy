@@ -7,6 +7,7 @@
 - [Recherche](https://mauktenieb.github.io/alchimie-delboy/recherche.html)
 - [Dictionnaire des symboles alchimiques](https://mauktenieb.github.io/alchimie-delboy/symboles.html)
 - [Notice](https://mauktenieb.github.io/alchimie-delboy/notice.html)
+- [Corpus alchimique libre de droits : 140 textes, 365 copies numérisées](https://mauktenieb.github.io/alchimie-delboy/corpus.html)
 
 ## Collection des grands traités
 

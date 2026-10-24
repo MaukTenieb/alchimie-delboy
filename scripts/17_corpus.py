@@ -6,6 +6,7 @@ import html
 import importlib.util
 import json
 import os
+import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = os.path.join(ROOT, "site")
@@ -24,9 +25,13 @@ HEAD = """<h1>Corpus <span class="sub">textes alchimiques libres de droits</span
 Albert Poisson, <i>Théories et symboles des alchimistes</i> (1891), introduction ·
 Michela Pereira (dir.), <i>Alchimia. I testi della tradizione occidentale</i> (Mondadori, 2006) ·
 Françoise Bonardel (dir.), <i>Philosopher par le feu</i> (Seuil, 1995).</p>
-<p class="facts">Par texte : éditions imprimées avant 1900, copies numérisées des bibliothèques, éditions critiques modernes en référence.</p>
+<p class="facts">Par texte : éditions anciennes imprimées, copies numérisées des bibliothèques, éditions critiques modernes en référence.</p>
 <p><input id="cf" type="search" placeholder="Filtrer : auteur, titre, bibliothèque" aria-label="Filtrer le corpus" style="width:100%;max-width:32rem;padding:.4rem;font:inherit"></p>
 """
+
+FOOT = ('<footer class="foot"><p>Corpus dressé par Mauk Tenieb à partir des quatre listes citées. '
+        'Copies numérisées : les bibliothèques nommées sur chaque fiche, qui les hébergent. '
+        'Contact : mauktenieb chez Gmail.</p></footer>')
 
 SCRIPT = """<script>
 (function(){var i=document.getElementById('cf');if(!i)return;
@@ -80,8 +85,9 @@ def main() -> None:
         body.append(f'<h2 id="ere-{k}">{E(v)} <span class="dim">({len(rows)})</span></h2>')
         body.extend(fiche(t) for t in rows)
     body.append(SCRIPT)
-    open(os.path.join(SITE, "corpus.html"), "w", encoding="utf-8").write(
-        lec.page("Corpus alchimique libre de droits", "\n".join(body), ""))
+    page = lec.page("Corpus alchimique libre de droits", "\n".join(body), "")
+    page = re.sub(r'<footer class="foot">.*?</footer>', FOOT, page, flags=re.S)
+    open(os.path.join(SITE, "corpus.html"), "w", encoding="utf-8").write(page)
     print(f"corpus.html : {n} textes, {c} copies")
 
 
