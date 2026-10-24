@@ -147,8 +147,8 @@ def main() -> None:
                         "Notice du site d'Hervé Delboy sur l'alchimie : auteur, contenu, adresses d'origine "
                         "(perso.club-internet.fr/hdelboy, herve.delboy.perso.sfr.fr), source, pages manquantes."),
         "lacunes.html": ("Pages manquantes — " + NAME,
-                         "Pages manquantes du site d'Hervé Delboy sur l'alchimie, à retrouver : liste des "
-                         "adresses, pages retrouvées, nouvelles adresses. Une copie ou un cache : mauktenieb chez Gmail."),
+                         "Pages manquantes du site d'Hervé Delboy sur l'alchimie, à retrouver : 34 "
+                         "noms de fichiers. Une copie ou un cache : mauktenieb chez Gmail."),
         "hors-perimetre.html": ("Pages écartées — " + NAME,
                                 "Pages du site d'Hervé Delboy hors alchimie : astrologie, musique, échecs, "
                                 "logiciels de statistiques, pages personnelles."),

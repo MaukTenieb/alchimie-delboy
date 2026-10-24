@@ -19,7 +19,7 @@ NOTICE = """<h1>Notice</h1>
 <tr><th>Adresses d'origine</th><td><code>perso.club-internet.fr/hdelboy</code>, 1999-2009 · <code>herve.delboy.perso.sfr.fr</code>, 2009-2016</td></tr>
 <tr><th>Source</th><td>Wayback Machine (Internet Archive), captures de 2001 à 2016 ; Common Crawl, une page</td></tr>
 <tr><th>Pages écartées</th><td><a href="hors-perimetre.html">88</a> : astrologie, musique, échecs, statistiques, pages personnelles</td></tr>
-<tr><th>Pages manquantes</th><td><a href="lacunes.html">46</a> : 6 retrouvées, 6 sous une nouvelle adresse, 34 à retrouver</td></tr>
+<tr><th>Pages manquantes</th><td><a href="lacunes.html">34</a>, à retrouver</td></tr>
 <tr><th>Interventions</th><td>encodage des caractères · liens et images en local · barre de lecture</td></tr>
 </table>
 """
@@ -49,18 +49,15 @@ def main() -> None:
     b = b.replace(' <span class="dim">(aucune capture exploitable (page d&#x27;erreur ou absente))</span>', "")
     # titres vides ou répétant le nom du fichier
     b = re.sub(r"<code>([^<]+?)\.html?</code> — (\1|index2|Untitled Document)\s*(?=<|$)", r"<code>\1.htm</code>", b)
-    n = [len(re.findall(r"<li>", part.split("</ul>")[0])) for part in b.split("<h2")[1:]]
     b = re.sub(r"<h2>([^<(]*?)\s*\(\d+\)</h2>", r"<h2>\1</h2>", b)
     if "gobineau.html" not in b:  # absente de la liste d'origine ; citée par un blog de 2015 (recherchestraditions.blogspot.com)
         b = re.sub(r'(<h2>(?:Perdues|À retrouver)</h2>\s*<ul class="list mono">)', r'\1<li><code>gobineau.html</code></li>', b, count=1)
-    n = [len(re.findall(r"<li>", part.split("</ul>")[0])) for part in b.split("<h2")[1:]]
-    b = re.sub(r'<p class="(?:lead|facts)">.*?</p>',
-               f'<p class="facts">{sum(n)} pages : liens du site d\'origine, captures vides (page d\'erreur de Club-Internet, code HTTP 200) · '
-               f'retrouvées : {n[0]} · nouvelle adresse : {n[1]} · à retrouver : {n[2]}</p>'
-               '<p class="facts">Une copie, un cache, une sauvegarde de l\'une de ces pages : mauktenieb chez Gmail.</p>', b, count=1, flags=re.S)
-    b = re.sub(r'(<p class="facts">Une copie.*?</p>)(<p class="facts">Une copie.*?</p>)', r"\1", b, flags=re.S)
-    b = re.sub(r"<h1>[^<]*</h1>", "<h1>Pages manquantes <span class=\"sub\">à retrouver — aidez-nous</span></h1>", b, count=1)
-    b = b.replace("<h2>Anciennes adresses</h2>", "<h2>Nouvelle adresse</h2>").replace("<h2>Perdues</h2>", "<h2>À retrouver</h2>")
+    # le lecteur garde la seule liste des pages à retrouver
+    ul = re.search(r'(?:<h2>(?:Perdues|À retrouver)</h2>\s*)?(<ul class="list mono">(?:(?!</ul>).)*gobineau(?:(?!</ul>).)*</ul>)', b, re.S).group(1)
+    n = len(re.findall(r"<li>", ul))
+    b = (f'<h1>Pages manquantes <span class="sub">à retrouver — aidez-nous</span></h1>'
+         f'<p class="facts">{n} pages : liens du site d\'origine, captures vides (page d\'erreur de Club-Internet, code HTTP 200)</p>'
+         '<p class="facts">Une copie, un cache, une sauvegarde de l\'une de ces pages : mauktenieb chez Gmail.</p>' + ul)
     write("lacunes.html", "Pages manquantes — Hervé Delboy, alchimie", b)
 
     b = main_of(os.path.join(SITE, "symboles.html"))
