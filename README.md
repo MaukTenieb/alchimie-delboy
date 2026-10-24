@@ -94,9 +94,10 @@ python 12_pdf.py          # anciens livres PDF, remplacés par l'étape 15
 python 13_lecture.py      # barre de lecture, sommaire, sections
 python 14_pages.py        # notice, pages perdues, pages écartées, symboles, 404
 python 15_pdf.py          # dix livres PDF, imprimés par Chromium depuis les pages de l'auteur
+python 16_seo.py          # titres, descriptions, données structurées, plan du site, llms.txt
 ```
 
-Les étapes 01 à 12 lisent le corpus intermédiaire ; 13, 14 et 15 travaillent sur `site/` seul. Le périmètre part du plan de l'auteur (`plan_alchimie.htm`), suit ses liens internes et écarte l'astrologie, la musique, les échecs et les statistiques ; `FORCED_IN` et `FORCED_OUT` (`04_classify.py`) tranchent les cas limites.
+Les étapes 01 à 12 lisent le corpus intermédiaire ; 13 à 16 travaillent sur `site/` seul, dans cet ordre. Le périmètre part du plan de l'auteur (`plan_alchimie.htm`), suit ses liens internes et écarte l'astrologie, la musique, les échecs et les statistiques ; `FORCED_IN` et `FORCED_OUT` (`04_classify.py`) tranchent les cas limites.
 
 ## Droits
 
