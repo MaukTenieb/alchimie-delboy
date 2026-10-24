@@ -344,3 +344,5 @@ body.ui .toc{background:none;border:0;border-radius:0;padding:0}
 /* recherche lancée : le formulaire s'efface, la barre garde la requête */
 body.has-q main > h1, body.has-q main > .facts, body.has-q #form{display:none}
 body.has-q main{padding-top:1.4rem}
+body.ui h1 .sub{display:block;font-size:.5em;letter-spacing:0;color:var(--ink2);margin-top:.35em;font-style:italic}
+body.ui table.notice th{width:13em;text-transform:none;letter-spacing:0;font-size:.86rem;font-weight:500;border-bottom:1px solid var(--rule);vertical-align:top;white-space:normal}

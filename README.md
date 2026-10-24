@@ -32,7 +32,7 @@ https://mauktenieb.github.io/alchimie-delboy/
 | `http://perso.club-internet.fr/hdelboy/` | novembre 1999 – septembre 2009 |
 | `http://herve.delboy.perso.sfr.fr/` | août 2009 – novembre 2016 |
 
-Club-Internet renvoyait sa page d'erreur avec le code HTTP 200 : l'archive enregistrait alors une page vide. 45 pages citées par le site sont dans ce cas. Bilan de la récupération : 6 retrouvées, 6 anciennes adresses reliées à leur page sous un nouveau nom, 33 perdues. Détail : `site/lacunes.html`.
+Pages manquantes : 46. Liens du site d'origine, captures vides (page d'erreur de Club-Internet, code HTTP 200) : 6 retrouvées, 6 sous une nouvelle adresse, 34 à retrouver ; liste : `site/lacunes.html`. Une copie, un cache, une sauvegarde : mauktenieb chez Gmail.
 
 | service consulté | résultat |
 |---|---|
@@ -84,15 +84,15 @@ python 02_fetch_pages.py  # 375 pages HTML
 python 03_extract.py      # titres, paragraphes, liens, images, ancres
 python 04_classify.py     # périmètre alchimie, anciennes adresses
 python 05_assets.py       # images
-python 06_build_site.py   # répliques, sections, pages perdues
+python 06_build_site.py   # répliques, sections, pages manquantes
 python 07_build_index.py  # index de recherche
 python 08_verify.py       # liens, ancres, images
-python 09_recover.py      # pages perdues : autres captures, autres services
+python 09_recover.py      # pages manquantes : autres captures, autres services
 python 10_axes.py         # entrées du filtre « Domaines »
 python 11_portail.py      # ancien portail, remplacé par l'étape 13
 python 12_pdf.py          # anciens livres PDF, remplacés par l'étape 15
 python 13_lecture.py      # barre de lecture, sommaire, sections
-python 14_pages.py        # notice, pages perdues, pages écartées, symboles, 404
+python 14_pages.py        # notice, pages manquantes, pages écartées, symboles, 404
 python 15_pdf.py          # dix livres PDF, imprimés par Chromium depuis les pages de l'auteur
 python 16_seo.py          # titres, descriptions, données structurées, plan du site, llms.txt
 ```

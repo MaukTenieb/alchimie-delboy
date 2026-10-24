@@ -144,11 +144,11 @@ def main() -> None:
                           "Dictionnaire des symboles alchimiques et spagyriques d'Hervé Delboy : 90 entrées, de "
                           "l'acide à la vitriolisation, avec leurs hiéroglyphes."),
         "notice.html": ("Notice — " + NAME,
-                        "Provenance des pages d'Hervé Delboy sur l'alchimie : perso.club-internet.fr/hdelboy "
-                        "(1999-2009), herve.delboy.perso.sfr.fr (2009-2016), captures de la Wayback Machine."),
-        "lacunes.html": ("Pages perdues — " + NAME,
-                         "Pages du site d'Hervé Delboy citées par ses liens et archivées vides : retrouvées, "
-                         "anciennes adresses, perdues."),
+                        "Notice du site d'Hervé Delboy sur l'alchimie : auteur, contenu, adresses d'origine "
+                        "(perso.club-internet.fr/hdelboy, herve.delboy.perso.sfr.fr), source, pages manquantes."),
+        "lacunes.html": ("Pages manquantes — " + NAME,
+                         "Pages manquantes du site d'Hervé Delboy sur l'alchimie, à retrouver : liste des "
+                         "adresses, pages retrouvées, nouvelles adresses. Une copie ou un cache : mauktenieb chez Gmail."),
         "hors-perimetre.html": ("Pages écartées — " + NAME,
                                 "Pages du site d'Hervé Delboy hors alchimie : astrologie, musique, échecs, "
                                 "logiciels de statistiques, pages personnelles."),

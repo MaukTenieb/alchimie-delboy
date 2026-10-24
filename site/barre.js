@@ -91,7 +91,7 @@
       '<span class="dlb-menu" id="dlb-menu" hidden>' +
         '<a id="dlb-en2" class="dlb-en2" target="_blank" rel="noopener">Lire en anglais</a>' +
         '<a href="' + BASE + 'notice.html">Notice</a>' +
-        '<a href="' + BASE + 'lacunes.html">Pages perdues</a>' +
+        '<a href="' + BASE + 'lacunes.html">Pages manquantes</a>' +
       "</span></span>" +
     "</span>";
 

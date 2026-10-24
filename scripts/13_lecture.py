@@ -189,7 +189,7 @@ def main() -> None:
     tss = sorted(x["ts"] for x in rows.values() if x["ts"])
     body = ['<h1>Sommaire</h1>',
             f'<p class="facts">{len(rows)} pages · {fmt_int(total_c)} caractères · '
-            f'{fmt_int(total_i)} images · {len(order)} sections · captures retenues de la '
+            f'{fmt_int(total_i)} images · {len(order)} sections · captures de la '
             f'Wayback Machine, {tss[0][:4]}–{tss[-1][:4]} · ordre et sections : '
             f'<a href="original/plan-alchimie.html">plan de l\'auteur</a></p>',
             '<ol class="toc">' + "".join(
