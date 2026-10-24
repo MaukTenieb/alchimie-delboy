@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Recherche — Hervé Delboy, alchimie</title>
+<link rel="stylesheet" href="style.css">
+</head><body>
+<header class="topbar">
+  <a class="brand" href="index.html">Hervé Delboy<span> — alchimie</span></a>
+  <nav>
+    <a href="plan.html">Plan</a>
+    <a href="guide.html">Index</a>
+    <a href="recherche.html">Recherche</a>
+    <a href="mots.html">Mots</a>
+    <a href="parcours.html">Dossiers</a>
+    <a href="method.html">Méthode</a>
+  </nav>
+</header>
+<main>
+  <h1>Recherche</h1>
+  <p class="lead">18 000 passages, 25 millions de caractères, 247 pages.
+  Mots, expressions, noms, formules ou questions entières : le moteur
+  interroge les textes, pas seulement les titres.</p>
+
+  <form id="form" class="searchbox" role="search" autocomplete="off">
+    <div class="searchwrap">
+      <input id="q" name="q" placeholder="mercure philosophique · Atalanta fugiens · qu’est-ce que le rebis ?"
+             aria-label="Rechercher dans le corpus" autocomplete="off" spellcheck="false">
+      <div id="sugg" class="sugg" role="listbox" hidden></div>
+    </div>
+    <button>Chercher</button>
+  </form>
+
+  <div class="toolbar">
+    <label class="chk"><input type="checkbox" id="qmode"> mode question <span class="dim">(élargit au thésaurus)</span></label>
+    <label class="dim">trier
+      <select id="sort">
+        <option value="pert">pertinence</option>
+        <option value="titre">titre</option>
+        <option value="long">longueur</option>
+        <option value="date">date d’archivage</option>
+      </select>
+    </label>
+    <label class="dim">résultats
+      <select id="per"><option>10</option><option>20</option><option>50</option></select>
+    </label>
+    <button type="button" id="advbtn" class="ghost">Recherche avancée</button>
+    <button type="button" id="export" class="ghost">Export CSV</button>
+  </div>
+
+  <section id="adv" class="adv" hidden>
+    <div class="advgrid">
+      <label>dans le titre<input id="f-titre" placeholder="atalanta"></label>
+      <label>dans le nom de fichier<input id="f-fichier" placeholder="toyson"></label>
+      <label>section<input id="f-section" placeholder="Douze Clefs, DC, 5…"></label>
+      <label>expression exacte<input id="f-phrase" placeholder="pierre philosophale"></label>
+      <label>termes obligatoires<input id="f-req" placeholder="soufre antimoine"></label>
+      <label>termes exclus<input id="f-exc" placeholder="astrologie musique"></label>
+    </div>
+    <p class="dim">Ces champs s’ajoutent à la requête : <code>titre:</code>,
+    <code>fichier:</code>, <code>section:</code>, <code>"…"</code>,
+    <code>+mot</code>, <code>-mot</code>.</p>
+    <details class="grammar">
+      <summary>Syntaxe complète</summary>
+      <table>
+        <tr><td><code>mercure soufre</code></td><td>l’un ou l’autre, classement par pertinence</td></tr>
+        <tr><td><code>"pierre philosophale"</code></td><td>expression exacte (adjacence vérifiée)</td></tr>
+        <tr><td><code>+soufre +antimoine</code></td><td>tous les termes doivent figurer dans le même passage</td></tr>
+        <tr><td><code>-astrologie</code></td><td>écarte les articles qui en parlent</td></tr>
+        <tr><td><code>philosoph*</code></td><td>tous les mots commençant par…</td></tr>
+        <tr><td><code>mercur~</code></td><td>tolère une faute de frappe (une lettre)</td></tr>
+        <tr><td><code>titre:toyson</code></td><td>restreint au titre de l’article</td></tr>
+        <tr><td><code>section:DC</code></td><td>restreint à une section (identifiant ou nom)</td></tr>
+        <tr><td><code>mercure | argent</code></td><td>alternative explicitement équilibrée</td></tr>
+      </table>
+    </details>
+  </section>
+
+  <p id="status" class="dim">chargement de l’index…</p>
+
+  <div class="layout">
+    <aside class="facets">
+      <div id="axesbox"></div>
+      <div id="facets"></div>
+    </aside>
+    <section class="results" id="results"></section>
+  </div>
+</main>
+<footer class="foot">
+  <p class="rights">© Hervé Delboy et ayants droit —
+  <span class="url">perso.club-internet.fr/hdelboy</span>, puis
+  <span class="url">herve.delboy.perso.sfr.fr</span> (site disparu).
+  Reproduction à des fins de consultation, de recherche et de conservation ;
+  aucune exploitation commerciale. Tous droits réservés aux auteurs et à
+  leurs ayants droit.</p>
+  <p><a href="notice.html">Notice, droits et provenance</a> ·
+  <a href="method.html">Méthode et sources</a> ·
+  <a href="lacunes.html">Pages perdues</a> ·
+  <a href="guide.html">Tous les index</a></p>
+</footer>
+
+<script src="moteur.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+const state = { q: "", mode: false, secs: new Set(), type: "tout",
+  images: false, sort: "pert", page: 1, per: 10, last: null,
+  axes: new Set() };
+let NOMS = [];
+
+const esc = Moteur.esc;
+
+function sectionName(s){ return Moteur.sectionName(s); }
+
+function runDelay(){ clearTimeout(window._t); window._t = setTimeout(run, 200); }
+
+async function init(){
+  try {
+    await Moteur.init();
+    fetch("data/noms.json").then(r => r.json()).then(j => NOMS = j || []).catch(() => {});
+    const p = new URLSearchParams(location.search);
+    if (p.get("q")) $("#q").value = p.get("q");
+    if (p.get("ax")) p.get("ax").split(",").forEach(a => state.axes.add(a));
+    if (p.get("mode") === "question") $("#qmode").checked = true;
+    if (p.get("sec")) p.get("sec").split(",").forEach(s => state.secs.add(s));
+    await Moteur.loadAxes().then(buildAxes).catch(() => {});
+    state.mode = $("#qmode").checked;
+    $("#status").textContent =
+      `${Moteur.meta.docs.length} articles · ${Moteur.meta.n.toLocaleString("fr")} passages · ` +
+      `${Moteur.vocab.length.toLocaleString("fr")} mots indexés — prêt.`;
+    run();
+  } catch (e) {
+    $("#status").innerHTML = "Impossible de charger l’index : " + esc(e.message) +
+      ". Le site doit être servi par <code>python serve.py</code> — " +
+      "l’ouverture directe du fichier bloque la lecture des données.";
+  }
+}
+
+/* ------------------------------------------------------------ suggestions */
+function suggest(q){
+  const box = $("#sugg");
+  const v = q.trim().toLowerCase();
+  if (v.length < 2){ box.hidden = true; return; }
+  const nq = Moteur.norm(v);
+  const words = [];
+  const vocab = Moteur.vocab;
+  let lo = 0, hi = vocab.length;
+  while (lo < hi){ const m = (lo + hi) >> 1; if (vocab[m] < nq) lo = m + 1; else hi = m; }
+  for (let i = lo; i < vocab.length && words.length < 6; i++){
+    if (!vocab[i].startsWith(nq)) break;
+    words.push({ t: vocab[i], n: Moteur.meta.df[vocab[i]], kind: "mot" });
+  }
+  const names = NOMS.filter(x => Moteur.norm(x.n).startsWith(nq)).slice(0, 4)
+    .map(x => ({ t: x.n, n: x.d, kind: "nom", s: x.s }));
+  const secs = Object.entries(Moteur.meta.sections)
+    .filter(([, lab]) => Moteur.norm(lab).startsWith(nq)).slice(0, 2)
+    .map(([id, lab]) => ({ t: lab, n: "", kind: "section", s: id }));
+  const all = [...names, ...secs, ...words];
+  if (!all.length){ box.hidden = true; return; }
+  box.innerHTML = all.map((x, i) =>
+    `<div class="sg" role="option" data-i="${i}" data-v="${esc(x.t)}" data-k="${x.kind}"
+      data-s="${esc(x.s || "")}">
+      <span class="k k-${x.kind}">${x.kind}</span>
+      <span>${esc(x.t)}</span>
+      <span class="n">${x.n ? x.n + " art." : ""}</span></div>`).join("");
+  box.hidden = false;
+  box.querySelectorAll(".sg").forEach(el => {
+    el.onmousedown = ev => { ev.preventDefault(); pick(el); };
+  });
+}
+
+function pick(el){
+  const k = el.dataset.k, v = el.dataset.v, s = el.dataset.s;
+  if (k === "nom") location.href = "noms/" + s + ".html";
+  else if (k === "section"){ state.secs = new Set([s]); $("#q").value = ""; run(); }
+  else { $("#q").value = v; $("#sugg").hidden = true; state.page = 1; run(); }
+}
+
+$("#q").addEventListener("input", e => {
+  suggest(e.target.value);
+  if (e.target.value.length >= 2) runDelay();
+  else if (!e.target.value.trim()){ state.page = 1; run(); }
+});
+$("#q").addEventListener("keydown", e => {
+  const box = $("#sugg");
+  if (box.hidden) return;
+  const items = [...box.querySelectorAll(".sg")];
+  const cur = items.findIndex(x => x.classList.contains("on"));
+  if (e.key === "ArrowDown" || e.key === "ArrowUp"){
+    e.preventDefault();
+    const next = e.key === "ArrowDown" ? Math.min(items.length - 1, cur + 1) : Math.max(0, cur - 1);
+    items.forEach(x => x.classList.remove("on"));
+    items[next].classList.add("on");
+  } else if (e.key === "Enter" && cur >= 0){
+    e.preventDefault(); pick(items[cur]);
+  } else if (e.key === "Escape"){ box.hidden = true; }
+});
+document.addEventListener("click", e => {
+  if (!e.target.closest(".searchwrap")) $("#sugg").hidden = true;
+});
+
+/* ------------------------------------------------------------------ axes */
+function buildAxes(A){
+  let h = `<div class="facetgroup"><h3>Domaines</h3>
+    <select id="axsel" aria-label="Filtrer par domaine">
+    <option value="">— un auteur, une œuvre, une notion… —</option>`;
+  for (const c of A.cats){
+    const es = A.entries.filter(e => e.cat === c.id);
+    if (!es.length) continue;
+    h += `<optgroup label="${esc(c.label)}">` + es.map(e =>
+      `<option value="${e.id}">${esc(e.label)} (${e.n})</option>`).join("") +
+      `</optgroup>`;
+  }
+  h += `</select><div id="axchips" class="chips axchips"></div>
+    <p class="dim"><a href="axes.html">tous les axes</a></p></div>`;
+  $("#axesbox").innerHTML = h;
+  $("#axsel").onchange = e => {
+    if (!e.target.value) return;
+    state.axes.add(e.target.value);
+    e.target.value = "";
+    state.page = 1;
+    renderAxChips();
+    run();
+  };
+  renderAxChips();
+}
+
+function renderAxChips(){
+  const box = $("#axchips");
+  if (!box) return;
+  const A = Moteur.axes;
+  if (!A) return;
+  box.innerHTML = [...state.axes].map(id => {
+    const e = A.byId[id] || { label: id };
+    return `<button class="chip ax" data-id="${id}"
+      title="retirer ce filtre">${esc(e.label)} ✕</button>`;
+  }).join("");
+  box.querySelectorAll(".ax").forEach(b => b.onclick = () => {
+    state.axes.delete(b.dataset.id);
+    state.page = 1;
+    renderAxChips();
+    run();
+  });
+}
+
+/* ---------------------------------------------------------------- requête */
+function fullQuery(){
+  let q = $("#q").value.trim();
+  const add = (id, pre, quote) => {
+    const v = $(id).value.trim();
+    if (v) q += " " + pre + (quote ? '"' + v + '"' : v);
+  };
+  add("#f-titre", "titre:");
+  add("#f-fichier", "fichier:");
+  add("#f-section", "section:");
+  add("#f-phrase", "", true);
+  $("#f-req").value.trim().split(/\s+/).filter(Boolean).forEach(w => q += " +" + w);
+  $("#f-exc").value.trim().split(/\s+/).filter(Boolean).forEach(w => q += " -" + w);
+  return q.trim();
+}
+
+async function run(){
+  if (!Moteur.meta) return;
+  state.q = fullQuery();
+  state.mode = $("#qmode").checked;
+  state.per = +$("#per").value;
+  const url = new URL(location.href);
+  if (state.q) url.searchParams.set("q", $("#q").value.trim()); else url.searchParams.delete("q");
+  if (state.mode) url.searchParams.set("mode", "question"); else url.searchParams.delete("mode");
+  if (state.secs.size) url.searchParams.set("sec", [...state.secs].join(","));
+  else url.searchParams.delete("sec");
+  if (state.axes.size) url.searchParams.set("ax", [...state.axes].join(","));
+  else url.searchParams.delete("ax");
+  history.replaceState(null, "", url);
+
+  if (!state.q && !state.axes.size){ intro(); state.last = null; return; }
+
+  $("#status").textContent = "recherche…";
+  if (!state.q){
+    const R = Moteur.allDocs();
+    state.last = R;
+    renderFacets(R);
+    await renderResults(R);
+    return;
+  }
+  const R = await Moteur.search(state.q, { thesaurus: state.mode });
+  state.last = R;
+  if (!R.docs.length){
+    $("#facets").innerHTML = "";
+    $("#results").innerHTML = `<p class="empty">Aucun résultat pour
+      « ${esc(state.q)} ».</p>
+      <p class="dim">${R.spec.errors.length
+        ? "Mots inconnus de l’index : " + R.spec.errors.map(esc).join(", ") + ". "
+        : ""}Essayez une forme plus courte, un préfixe (<code>philosoph*</code>),
+      ou décochez les filtres.</p>`;
+    $("#status").textContent = "0 article · " + R.ms + " ms";
+    return;
+  }    renderFacets(R);
+    await renderResults(R);
+  }
+
+function filtered(R){
+  let out = R.docs.filter(v => {
+    const d = Moteur.meta.docs[v.doc];
+    if (state.secs.size && !state.secs.has(d.sec)) return false;
+    if (state.type !== "tout" && d.type !== state.type) return false;
+    if (state.images && !d.img) return false;
+    if (state.axes.size && !Moteur.axisPass(v.doc, state.axes)) return false;
+    return true;
+  });
+  if (state.sort === "titre")
+    out.sort((a, b) => Moteur.norm(Moteur.meta.docs[a.doc].t)
+      .localeCompare(Moteur.norm(Moteur.meta.docs[b.doc].t), "fr"));
+  if (state.sort === "long")
+    out.sort((a, b) => Moteur.meta.docs[b.doc].c - Moteur.meta.docs[a.doc].c);
+  if (state.sort === "date")
+    out.sort((a, b) => Moteur.meta.docs[b.doc].ts.localeCompare(Moteur.meta.docs[a.doc].ts));
+  return out;
+}
+
+/* ---------------------------------------------------------------- facettes */
+function renderFacets(R){
+  const secs = {}, types = { texte: 0, etude: 0 };
+  let illus = 0;
+  for (const v of R.docs){
+    const d = Moteur.meta.docs[v.doc];
+    secs[d.sec] = (secs[d.sec] || 0) + 1;
+    types[d.type]++;
+    if (d.img) illus++;
+  }
+  const order = Object.keys(secs).sort((a, b) => secs[b] - secs[a]);
+  let h = `<div class="facetgroup"><h3>Sections</h3>`;
+  for (const s of order){
+    h += `<label><input type="checkbox" data-sec="${s}"
+      ${state.secs.has(s) ? "checked" : ""}>
+      <span>${esc(sectionName(s))}</span><span class="n">${secs[s]}</span></label>`;
+  }
+  h += `</div><div class="facetgroup"><h3>Nature</h3>`;
+  h += `<label><input type="checkbox" data-type="texte" ${state.type === "texte" ? "checked" : ""}>
+    <span>Textes anciens</span><span class="n">${types.texte}</span></label>`;
+  h += `<label><input type="checkbox" data-type="etude" ${state.type === "etude" ? "checked" : ""}>
+    <span>Études modernes</span><span class="n">${types.etude}</span></label>`;
+  h += `</div><div class="facetgroup"><h3>Autres</h3>
+    <label><input type="checkbox" id="f-images" ${state.images ? "checked" : ""}>
+    <span>articles illustrés</span><span class="n">${illus}</span></label></div>`;
+
+  if (state.secs.size || state.type !== "tout" || state.images){
+    h += `<p><button class="ghost" id="clear">Effacer les filtres</button></p>`;
+  }
+  $("#facets").innerHTML = h;
+
+  $("#facets").querySelectorAll("[data-sec]").forEach(cb => cb.onchange = () => {
+    const s = cb.dataset.sec;
+    if (cb.checked) state.secs.add(s); else state.secs.delete(s);
+    state.page = 1; run();
+  });
+  $("#facets").querySelectorAll("[data-type]").forEach(cb => cb.onchange = () => {
+    state.type = state.type === cb.dataset.type ? "tout" : cb.dataset.type;
+    state.page = 1; run();
+  });
+  const im = $("#f-images");
+  if (im) im.onchange = () => { state.images = im.checked; state.page = 1; run(); };
+  const cl = $("#clear");
+  if (cl) cl.onclick = () => {
+    state.secs.clear(); state.type = "tout"; state.images = false;
+    state.axes.clear(); renderAxChips();
+    state.page = 1; run();
+  };
+}
+
+/* ---------------------------------------------------------------- résultats */
+async function renderResults(R){
+  const rows = filtered(R);
+  const pages = Math.max(1, Math.ceil(rows.length / state.per));
+  if (state.page > pages) state.page = pages;
+  const slice = rows.slice((state.page - 1) * state.per, state.page * state.per);
+
+  /* on ne charge que les seaux des passages affichés */
+  const pids = slice.flatMap(v => v.top.slice(0, 3));
+  await Moteur.ensurePassages(pids);
+
+  const words = [...new Set(R.qterms.filter(q => !q.excluded).map(q => q.t))];
+  const rawWords = R.spec.terms.map(t => t.raw).concat(
+    R.spec.phrases);
+  let html = "";
+
+  if (state.mode && slice.length){
+    const best = bestAnswer(R);
+    if (best){
+      html += `<div class="result answer-card">
+        <span class="src">Réponse la plus proche — ${esc(Moteur.meta.docs[best.doc].t)}</span>
+        <p class="answer">${Moteur.highlight(best.text, rawWords)}</p>
+        <p class="dim">${best.heading ? "« " + esc(best.heading) + " » — " : ""}
+        <a href="articles/${Moteur.meta.docs[best.doc].s}.html#p${best.para}">lire le passage dans l’article</a></p>
+      </div>`;
+    }
+  }
+
+  html += slice.map(v => {
+    const d = Moteur.meta.docs[v.doc];
+    const pids3 = v.top.slice(0, 3);
+    const pass = pids3.map(pid => Moteur.passage(pid)).filter(Boolean);
+    const snips = pass.map(p => `<p class="mpass">${Moteur.highlight(
+      Moteur.snippet(p.t, rawWords, 320), rawWords)}
+      <a class="jump" href="articles/${d.s}.html#p${p.p}">↧ situer</a></p>`).join("");
+    return `<div class="result">
+      <span class="src">${esc(sectionName(d.sec))}${d.type === "texte" ? " · texte ancien" : ""}</span>
+      <h3><a href="articles/${d.s}.html">${Moteur.highlight(d.t, rawWords)}</a></h3>
+      ${snips}
+      <p class="dim">${v.hits ? `${v.hits} passage${v.hits > 1 ? "s" : ""} pertinent${v.hits > 1 ? "s" : ""}` : "article correspondant"}
+        · <code>${esc(d.k)}</code> · ${(d.c / 1000).toFixed(0)} k car. · ${d.img} ill.
+        · <a href="articles/${d.s}.html">lire</a>
+        · <a href="original/${d.s}.html">réplique</a></p>
+    </div>`;
+  }).join("");
+
+  if (pages > 1){
+    html += `<div class="pager">`;
+    const win = 9;
+    let from = Math.max(1, state.page - 4), to = Math.min(pages, from + win - 1);
+    from = Math.max(1, to - win + 1);
+    if (from > 1) html += `<button data-page="1">1</button><span class="dim">…</span>`;
+    for (let i = from; i <= to; i++)
+      html += `<button data-page="${i}" ${i === state.page ? 'aria-current="page"' : ""}>${i}</button>`;
+    if (to < pages) html += `<span class="dim">…</span><button data-page="${pages}">${pages}</button>`;
+    html += `</div>`;
+  }
+  $("#results").innerHTML = html;
+  $("#results").querySelectorAll("[data-page]").forEach(b => b.onclick = () => {
+    state.page = +b.dataset.page;
+    renderResults(R);
+    $("#results").scrollIntoView({ block: "start" });
+  });
+  $("#status").textContent =
+    `${rows.length} article${rows.length > 1 ? "s" : ""} · ${R.ms} ms · ` +
+    `${R.loaded} fragment${R.loaded > 1 ? "s" : ""} d’index chargé${R.loaded > 1 ? "s" : ""}`;
+}
+
+function bestAnswer(R){
+  const words = [...new Set(R.qterms.filter(q => !q.excluded).map(q => q.t))];
+  const def = /(est|sont|signifie|désigne|consiste|appelle|nomme|veut dire)\s/i;
+  let best = null, bestScore = -1;
+  for (const v of R.docs.slice(0, 20)){
+    if (!v.top || !v.top.length) continue;
+    for (const pid of v.top){
+      const p = Moteur.passage(pid);
+      if (!p) continue;
+      const s = v.score * (def.test(Moteur.norm(p.t)) ? 1.4 : 1);
+      if (s > bestScore){
+        bestScore = s;
+        best = { doc: v.doc, text: Moteur.snippet(p.t, words, 520),
+          heading: p.h, para: p.p };
+      }
+    }
+  }
+  return best;
+}
+
+/* --------------------------------------------------------------- amorçage */
+function intro(){
+  const secs = {};
+  Moteur.meta.docs.forEach(d => secs[d.sec] = (secs[d.sec] || 0) + 1);
+  $("#facets").innerHTML = `<div class="facetgroup"><h3>Sections</h3>` +
+    Object.entries(secs).sort((a, b) => b[1] - a[1]).map(([s, n]) =>
+      `<label><input type="checkbox" data-sec="${s}"><span>${esc(sectionName(s))}</span>
+       <span class="n">${n}</span></label>`).join("") + `</div>`;
+  $("#facets").querySelectorAll("[data-sec]").forEach(cb => cb.onchange = () => {
+    state.secs = new Set([cb.dataset.sec]); state.page = 1; run();
+  });
+
+  const ex = ["mercure", "pierre philosophale", "putréfaction", "antimoine",
+    "Atalanta fugiens", "Douze Clefs", "Nicolas Flamel", "Paracelse", "vitriol",
+    "athanor", "rebis", "or potable", "toyson", "Cyliani"];
+  const q = (t) => `recherche.html?q=${encodeURIComponent(t)}`;
+  $("#results").innerHTML = `
+    <div class="result">
+      <h3>Entrer par un mot</h3>
+      <p class="chips">${ex.map(t => `<a class="chip" href="${q(t)}">${esc(t)}</a>`).join("")}</p>
+    </div>
+    <div class="result">
+      <h3>Entrer par une question</h3>
+      <p class="chips">
+        <a class="chip" href="recherche.html?q=${encodeURIComponent("qu’est-ce que le rebis")}&mode=question">qu’est-ce que le rebis ?</a>
+        <a class="chip" href="recherche.html?q=${encodeURIComponent("comment distiller l’eau de vie")}&mode=question">comment distiller l’eau de vie ?</a>
+        <a class="chip" href="recherche.html?q=${encodeURIComponent("pourquoi le corbeau est-il noir")}&mode=question">pourquoi le corbeau est-il noir ?</a>
+        <a class="chip" href="recherche.html?q=${encodeURIComponent("Chevreul et l’alchimie")}&mode=question">Chevreul et l’alchimie</a>
+      </p>
+    </div>
+    <div class="result">
+      <h3>Autres axes de consultation</h3>
+      <p class="chips">
+        <a class="chip" href="plan.html">plan de l’auteur</a>
+        <a class="chip" href="index-general.html">index alphabétique</a>
+        <a class="chip" href="mots.html">index des mots</a>
+        <a class="chip" href="noms.html">index des noms</a>
+        <a class="chip" href="symboles.html">dictionnaire des symboles</a>
+      </p>
+    </div>
+    <div class="result">
+      <h3>Ce que le moteur sait faire</h3>
+      <p class="dim">Expression exacte <code>"…"</code>, termes obligatoires
+      <code>+mot</code>, exclusions <code>-mot</code>, préfixes
+      <code>philosoph*</code>, fautes de frappe <code>mercur~</code>,
+      champs <code>titre:</code> <code>section:</code> <code>fichier:</code>.
+      Le mode question élargit aux équivalents alchimiques (vif-argent pour
+      mercure, androgyne pour rebis…).</p>
+    </div>`;
+}
+
+$("#form").addEventListener("submit", e => {
+  e.preventDefault();
+  $("#sugg").hidden = true;
+  state.page = 1;
+  run();
+});
+$("#qmode").addEventListener("change", () => { state.page = 1; run(); });
+$("#sort").addEventListener("change", () => {
+  state.sort = $("#sort").value; state.page = 1;
+  if (state.last) renderResults(state.last);
+});
+$("#per").addEventListener("change", () => {
+  state.per = +$("#per").value; state.page = 1;
+  if (state.last) renderResults(state.last);
+});
+$("#advbtn").addEventListener("click", () => {
+  $("#adv").hidden = !$("#adv").hidden;
+  $("#advbtn").setAttribute("aria-expanded", String(!$("#adv").hidden));
+});
+["#f-titre", "#f-fichier", "#f-section", "#f-phrase", "#f-req", "#f-exc"]
+  .forEach(id => $(id).addEventListener("input", () => { state.page = 1; runDelay(); }));
+
+$("#export").addEventListener("click", async () => {
+  if (!state.last || !state.last.docs.length){ return; }
+  const rows = filtered(state.last);
+  await Moteur.ensurePassages(rows.map(v => v.top[0]).filter(x => x !== undefined));
+  const clean = (s) => '"' + String(s).replace(/"/g, '""').replace(/\s+/g, " ") + '"';
+  const lines = ["titre;section;passages;caracteres;url;extrait"];
+  for (const v of rows){
+    const d = Moteur.meta.docs[v.doc];
+      const p = v.top.length ? Moteur.passage(v.top[0]) : null;
+    lines.push([clean(d.t), clean(sectionName(d.sec)), v.hits, d.c,
+      clean(location.origin + location.pathname.replace(/[^/]*$/, "") +
+        "articles/" + d.s + ".html"),
+      clean(p ? p.t.slice(0, 300) : "")].join(";"));
+  }
+  const blob = new Blob(["\ufeff" + lines.join("\r\n")],
+    { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "delboy-recherche-" +
+    Moteur.norm($("#q").value).replace(/[^a-z0-9]+/g, "-").slice(0, 40) + ".csv";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "/" && document.activeElement.tagName !== "INPUT"){
+    e.preventDefault(); $("#q").focus(); $("#q").select();
+  }
+});
+
+init();
+</script>
+</body></html>

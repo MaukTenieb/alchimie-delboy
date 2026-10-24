@@ -1,0 +1,13 @@
+# Cache HTTP des archives (re-téléchargeable)
+/cache/
+__pycache__/
+*.pyc
+*.zip
+*.log
+
+# Corpus intermédiaire, à la racine seulement : reconstituable par les étapes
+# 01 à 05. Il est fourni dans l'archive complète, pas dans le dépôt Git.
+# Attention : sans le « / » initial, ces motifs excluraient aussi site/data/,
+# c'est-à-dire l'index de recherche et les axes.
+/data/
+/raw/
