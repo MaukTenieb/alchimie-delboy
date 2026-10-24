@@ -122,6 +122,10 @@ def pdf_size(rel: str) -> int:
     return int(out[3]) if len(out) > 3 else 0
 
 
+def mo(size: int) -> str:
+    return f"{size/1e6:.1f} Mo".replace(".", ",")
+
+
 def fmt_int(n: int) -> str:
     return f"{n:,}".replace(",", " ")
 
@@ -185,7 +189,7 @@ def main() -> None:
     tss = sorted(x["ts"] for x in rows.values() if x["ts"])
     body = ['<h1>Sommaire</h1>',
             f'<p class="facts">{len(rows)} pages · {fmt_int(total_c)} caractères · '
-            f'{fmt_int(total_i)} images · {len(order)} sections · captures de la '
+            f'{fmt_int(total_i)} images · {len(order)} sections · captures retenues de la '
             f'Wayback Machine, {tss[0][:4]}–{tss[-1][:4]} · ordre et sections : '
             f'<a href="original/plan-alchimie.html">plan de l\'auteur</a></p>',
             '<ol class="toc">' + "".join(
@@ -197,8 +201,8 @@ def main() -> None:
         size = pdf_size(pdf)
         body.append(f'<h2 id="s{sid}">{esc(sec_label[sid])}</h2>'
                     f'<p class="facts">{len(sr)} pages · {fmt_int(sum(x["chars"] for x in sr))} caractères'
-                    + (f' · <a href="{pdf}">PDF, {size/1e6:.1f} Mo</a>' if size else "")
-                    + f' · <a href="sections/{sid}.html">section seule</a></p>')
+                    + (f' · <a href="{pdf}">PDF, {mo(size)}</a>' if size else "")
+                    + f' · <a href="sections/{sid}.html">page de la section</a></p>')
         body.append(table(sr, ""))
     open(os.path.join(SITE, "sommaire.html"), "w", encoding="utf-8").write(
         page("Sommaire — Hervé Delboy, alchimie", "\n".join(body), ""))
@@ -210,7 +214,7 @@ def main() -> None:
         b = (f'<p class="crumb"><a href="../sommaire.html">Sommaire</a></p>'
              f'<h1>{esc(sec_label[sid])}</h1>'
              f'<p class="facts">{len(sr)} pages · {fmt_int(sum(x["chars"] for x in sr))} caractères'
-             + (f' · <a href="../{pdf}">PDF, {size/1e6:.1f} Mo</a>' if size else "") + '</p>'
+             + (f' · <a href="../{pdf}">PDF, {mo(size)}</a>' if size else "") + '</p>'
              + table(sr, "../"))
         open(os.path.join(SITE, "sections", sid + ".html"), "w", encoding="utf-8").write(
             page(f"{sec_label[sid]} — Hervé Delboy, alchimie", b, "../"))

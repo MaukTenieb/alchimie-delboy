@@ -22,7 +22,7 @@ ligne par Mauk Tenieb, 2026.</p>
 <tr><td><code>http://perso.club-internet.fr/hdelboy/</code></td><td>novembre 1999 – septembre 2009</td></tr>
 <tr><td><code>http://herve.delboy.perso.sfr.fr/</code></td><td>août 2009 – novembre 2016</td></tr>
 </table>
-<p>Les deux adresses ont disparu. Les pages viennent des captures de l'Internet Archive
+<p>Les deux adresses sont hors ligne. Les pages viennent des captures de l'Internet Archive
 (Wayback Machine) ; le <a href="sommaire.html">sommaire</a> donne, pour chaque page,
 la date de sa capture et le lien vers elle.</p>
 <table class="data">
@@ -70,6 +70,10 @@ def main() -> None:
                b, count=1, flags=re.S)
     b = re.sub(r"<h1>[^<]*</h1>", "<h1>Pages perdues</h1>", b, count=1)
     b = b.replace(' <span class="dim">(aucune capture exploitable (page d&#x27;erreur ou absente))</span>', "")
+    b = b.replace("Le site a connu plusieurs refontes. Les captures anciennes citent ces adresses ; la page portait déjà un autre nom au moment de l'archivage. Son texte figure dans la reconstitution sous le nouveau nom, et les liens vers l'ancienne adresse mènent à lui.",
+                  "Les refontes du site changent le nom de ces pages. Les captures anciennes citent l'ancienne adresse ; le texte figure dans la reconstitution sous le nouveau nom, et les liens vers l'ancienne adresse mènent à lui.")
+    b = b.replace("Les archives consultées gardent, pour ces pages, la seule page d'erreur de l'hébergeur : la page avait déjà disparu au moment de l'archivage.",
+                  "Pour ces pages, les archives consultées gardent la seule page d'erreur de l'hébergeur, enregistrée après leur disparition.")
     write("lacunes.html", "Pages perdues — Hervé Delboy, alchimie", b)
 
     b = main_of(os.path.join(SITE, "symboles.html"))
