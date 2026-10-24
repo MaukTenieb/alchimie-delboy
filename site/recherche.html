@@ -44,23 +44,9 @@
       <label>termes obligatoires<input id="f-req" placeholder="soufre antimoine"></label>
       <label>termes exclus<input id="f-exc" placeholder="astrologie musique"></label>
     </div>
-    <p class="dim">Ces champs s’ajoutent à la requête : <code>titre:</code>,
+    <p class="dim">Champs ajoutés à la requête : <code>titre:</code>,
     <code>fichier:</code>, <code>section:</code>, <code>"…"</code>,
     <code>+mot</code>, <code>-mot</code>.</p>
-    <details class="grammar">
-      <summary>Syntaxe complète</summary>
-      <table>
-        <tr><td><code>mercure soufre</code></td><td>l’un ou l’autre, classement par pertinence</td></tr>
-        <tr><td><code>"pierre philosophale"</code></td><td>expression exacte (adjacence vérifiée)</td></tr>
-        <tr><td><code>+soufre +antimoine</code></td><td>tous les termes doivent figurer dans le même passage</td></tr>
-        <tr><td><code>-astrologie</code></td><td>écarte les articles qui en parlent</td></tr>
-        <tr><td><code>philosoph*</code></td><td>tous les mots commençant par…</td></tr>
-        <tr><td><code>mercur~</code></td><td>tolère une faute de frappe (une lettre)</td></tr>
-        <tr><td><code>titre:toyson</code></td><td>restreint au titre de l’article</td></tr>
-        <tr><td><code>section:DC</code></td><td>restreint à une section (identifiant ou nom)</td></tr>
-        <tr><td><code>mercure | argent</code></td><td>alternative explicitement équilibrée</td></tr>
-      </table>
-    </details>
   </section>
 
   <p id="status" class="dim">chargement de l’index…</p>
@@ -104,13 +90,13 @@ async function init(){
     await Moteur.loadAxes().then(buildAxes).catch(() => {});
     state.mode = $("#qmode").checked;
     $("#status").textContent =
-      `${Moteur.meta.docs.length} articles · ${Moteur.meta.n.toLocaleString("fr")} passages · ` +
-      `${Moteur.vocab.length.toLocaleString("fr")} mots indexés — prêt.`;
+      `${Moteur.meta.docs.length} pages · ${Moteur.meta.n.toLocaleString("fr")} passages · ` +
+      `${Moteur.vocab.length.toLocaleString("fr")} mots indexés`;
     run();
   } catch (e) {
-    $("#status").innerHTML = "Impossible de charger l’index : " + esc(e.message) +
-      ". Le site doit être servi par <code>python serve.py</code> — " +
-      "l’ouverture directe du fichier bloque la lecture des données.";
+    $("#status").innerHTML = "Index illisible : " + esc(e.message) +
+      ". En local, ouvrir le site par <code>python serve.py</code> : le navigateur " +
+      "bloque la lecture des données d’un fichier ouvert directement.";
   }
 }
 
@@ -266,13 +252,13 @@ async function run(){
   state.last = R;
   if (!R.docs.length){
     $("#facets").innerHTML = "";
-    $("#results").innerHTML = `<p class="empty">Aucun résultat pour
+    $("#results").innerHTML = `<p class="empty">Zéro résultat pour
       « ${esc(state.q)} ».</p>
       <p class="dim">${R.spec.errors.length
-        ? "Mots inconnus de l’index : " + R.spec.errors.map(esc).join(", ") + ". "
-        : ""}Essayez une forme plus courte, un préfixe (<code>philosoph*</code>),
-      ou décochez les filtres.</p>`;
-    $("#status").textContent = "0 article · " + R.ms + " ms";
+        ? "Mots absents de l’index : " + R.spec.errors.map(esc).join(", ") + ". "
+        : ""}Une forme plus courte, un préfixe (<code>philosoph*</code>)
+      ou moins de filtres élargissent la recherche.</p>`;
+    $("#status").textContent = "0 page · " + R.ms + " ms";
     return;
   }    renderFacets(R);
     await renderResults(R);
@@ -314,14 +300,14 @@ function renderFacets(R){
       ${state.secs.has(s) ? "checked" : ""}>
       <span>${esc(sectionName(s))}</span><span class="n">${secs[s]}</span></label>`;
   }
-  h += `</div><div class="facetgroup"><h3>Nature</h3>`;
+  h += `</div><div class="facetgroup"><h3>Genre</h3>`;
   h += `<label><input type="checkbox" data-type="texte" ${state.type === "texte" ? "checked" : ""}>
-    <span>Textes anciens</span><span class="n">${types.texte}</span></label>`;
+    <span>Textes transcrits</span><span class="n">${types.texte}</span></label>`;
   h += `<label><input type="checkbox" data-type="etude" ${state.type === "etude" ? "checked" : ""}>
-    <span>Études modernes</span><span class="n">${types.etude}</span></label>`;
-  h += `</div><div class="facetgroup"><h3>Autres</h3>
+    <span>Études de l’auteur</span><span class="n">${types.etude}</span></label>`;
+  h += `</div><div class="facetgroup"><h3>Images</h3>
     <label><input type="checkbox" id="f-images" ${state.images ? "checked" : ""}>
-    <span>articles illustrés</span><span class="n">${illus}</span></label></div>`;
+    <span>pages illustrées</span><span class="n">${illus}</span></label></div>`;
 
   if (state.secs.size || state.type !== "tout" || state.images){
     h += `<p><button class="ghost" id="clear">Effacer les filtres</button></p>`;
@@ -410,8 +396,8 @@ async function renderResults(R){
     $("#results").scrollIntoView({ block: "start" });
   });
   $("#status").textContent =
-    `${rows.length} article${rows.length > 1 ? "s" : ""} · ${R.ms} ms · ` +
-    `${R.loaded} fragment${R.loaded > 1 ? "s" : ""} d’index chargé${R.loaded > 1 ? "s" : ""}`;
+    `${rows.length} page${rows.length > 1 ? "s" : ""} · ${R.ms} ms · ` +
+    `${R.loaded} fragment${R.loaded > 1 ? "s" : ""} d’index`;
 }
 
 function bestAnswer(R){

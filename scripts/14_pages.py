@@ -13,41 +13,44 @@ lec = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(lec)
 
 NOTICE = """<h1>Notice</h1>
+<p class="facts">Le site d'Hervé Delboy sur l'alchimie, années 2000 : 247 pages en
+dix sections, dans l'ordre de son plan, 3 002 images, dix livres PDF. Remise en
+ligne par Mauk Tenieb, 2026.</p>
 <h2>Provenance</h2>
 <table class="data">
 <tr><th>Adresse d'origine</th><th>Captures</th></tr>
 <tr><td><code>http://perso.club-internet.fr/hdelboy/</code></td><td>novembre 1999 – septembre 2009</td></tr>
 <tr><td><code>http://herve.delboy.perso.sfr.fr/</code></td><td>août 2009 – novembre 2016</td></tr>
 </table>
-<p>Les deux adresses sont hors ligne. Les pages proviennent de l'Internet Archive
-(Wayback Machine) ; le <a href="sommaire.html">sommaire</a> donne la date de la capture
-de chaque page et le lien vers cette capture.</p>
+<p>Les deux adresses ont disparu. Les pages viennent des captures de l'Internet Archive
+(Wayback Machine) ; le <a href="sommaire.html">sommaire</a> donne, pour chaque page,
+la date de sa capture et le lien vers elle.</p>
 <table class="data">
 <tr><th>Pages</th><th class="n">Nombre</th></tr>
 <tr><td>Pages d'alchimie reconstituées</td><td class="n">247</td></tr>
 <tr><td><a href="hors-perimetre.html">Pages écartées</a> (astrologie, musique, échecs, statistiques, pages personnelles)</td><td class="n">88</td></tr>
-<tr><td><a href="lacunes.html">Pages référencées sans contenu archivé</a></td><td class="n">45</td></tr>
+<tr><td><a href="lacunes.html">Pages citées, archivées vides</a></td><td class="n">45</td></tr>
 </table>
 <h2>Fidélité</h2>
-<p>Les pages sont données telles que l'auteur les a établies : graphies, coupures
-de mots, coquilles, mise en page. Interventions : encodage des caractères, liens
-et images rendus locaux, une ligne de navigation en tête de page.</p>
+<p>Chaque page reprend la page de l'auteur : graphies, coupures de mots, coquilles,
+mise en page. La reconstitution intervient sur l'encodage des caractères, sur les
+liens et les images, rendus locaux, et ajoute une barre de lecture en tête de page.</p>
 <h2>Droits</h2>
-<p>Les textes, transcriptions, traductions, notices, mises en page et images
-reproduits ici sont l'œuvre d'Hervé Delboy ou des auteurs qu'il citait. Ils
-demeurent protégés par le droit d'auteur et appartiennent à leurs auteurs et à
-leurs ayants droit.</p>
-<p>Cette reconstitution constitue un usage de consultation, de recherche et de
-conservation : elle ne fait l'objet d'aucune vente, d'aucune diffusion
-publicitaire, d'aucune exploitation commerciale.</p>
-<p>Toute demande d'un auteur ou d'un ayant droit — retrait d'une page ou d'une
-image, correction d'une mention, précision de crédit — sera suivie d'effet sans
-délai.</p>
+<p>Textes, transcriptions, traductions, notices, mises en page et images : l'œuvre
+d'Hervé Delboy et des auteurs qu'il citait, protégée par le droit d'auteur,
+propriété de leurs auteurs et de leurs ayants droit.</p>
+<p>Usage : consultation, recherche, conservation. Zéro vente, zéro publicité,
+zéro exploitation commerciale.</p>
+<p>La demande d'un auteur ou d'un ayant droit — retrait d'une page ou d'une image,
+correction d'une mention, précision d'un crédit — s'applique sans délai :
+mauktenieb chez Gmail.</p>
 <h2>Outils</h2>
-<p><a href="sommaire.html">Sommaire</a> dans l'ordre du plan de l'auteur ·
-<a href="recherche.html">recherche</a> en texte intégral · <a href="symboles.html">dictionnaire
-des symboles</a> de l'auteur · un PDF par section · sur chaque page : taille du
-texte, loupe, impression ou PDF, EPUB.</p>
+<p><a href="sommaire.html">Sommaire</a>, dans l'ordre du plan de l'auteur ·
+<a href="recherche.html">recherche</a> en texte intégral, avec renvoi au passage ·
+<a href="symboles.html">dictionnaire des symboles</a> de l'auteur · un PDF par section ·
+sur chaque page : page précédente et suivante, taille, police, colonne, modes nuit
+et noir et blanc, loupe et visionneuse des planches, lecture à voix haute,
+surlignages et notes, PDF, EPUB.</p>
 """
 
 
@@ -65,7 +68,7 @@ def main() -> None:
 
     b = main_of(os.path.join(SITE, "hors-perimetre.html"))
     b = re.sub(r'<p class="lead">.*?</p>',
-               '<p class="facts">88 pages du site d\'origine, hors de la reconstitution : '
+               '<p class="facts">88 pages du site d\'origine traitent d\'autres domaines et restent hors de la reconstitution : '
                'astrologie (directions primaires, transits, statistiques), musique, échecs, '
                'logiciels de statistiques, pages personnelles.</p>', b, count=1, flags=re.S)
     b = re.sub(r"<h1>[^<]*</h1>", "<h1>Pages écartées</h1>", b, count=1)
@@ -73,7 +76,7 @@ def main() -> None:
 
     b = main_of(os.path.join(SITE, "lacunes.html"))
     b = re.sub(r'<p class="lead">.*?</p>',
-               '<p class="facts">45 pages référencées par le site d\'origine, archivées sans contenu : '
+               '<p class="facts">45 pages référencées par le site d\'origine, archivées vides : '
                'l\'hébergeur Club-Internet renvoyait sa page d\'erreur avec le code HTTP 200. '
                'Retrouvées : 5 · anciennes adresses d\'une page présente : 6 · perdues : 34.</p>',
                b, count=1, flags=re.S)
