@@ -64,11 +64,12 @@ def main() -> None:
 
     b = main_of(os.path.join(SITE, "lacunes.html"))
     b = re.sub(r'<p class="lead">.*?</p>',
-               '<p class="facts">45 pages référencées par le site d\'origine, archivées vides : '
+               '<p class="facts">45 pages citées par le site d\'origine, archivées vides : '
                'l\'hébergeur Club-Internet renvoyait sa page d\'erreur avec le code HTTP 200. '
                'Retrouvées : 5 · anciennes adresses d\'une page présente : 6 · perdues : 34.</p>',
                b, count=1, flags=re.S)
     b = re.sub(r"<h1>[^<]*</h1>", "<h1>Pages perdues</h1>", b, count=1)
+    b = b.replace(' <span class="dim">(aucune capture exploitable (page d&#x27;erreur ou absente))</span>', "")
     write("lacunes.html", "Pages perdues — Hervé Delboy, alchimie", b)
 
     b = main_of(os.path.join(SITE, "symboles.html"))

@@ -252,13 +252,11 @@ async function run(){
   state.last = R;
   if (!R.docs.length){
     $("#facets").innerHTML = "";
-    $("#results").innerHTML = `<p class="empty">Zéro résultat pour
-      « ${esc(state.q)} ».</p>
+    $("#results").innerHTML = `<p class="empty">Résultat, zéro... « ${esc(state.q)} »</p>
       <p class="dim">${R.spec.errors.length
-        ? "Mots absents de l’index : " + R.spec.errors.map(esc).join(", ") + ". "
-        : ""}Une forme plus courte, un préfixe (<code>philosoph*</code>)
-      ou moins de filtres élargissent la recherche.</p>`;
-    $("#status").textContent = "0 page · " + R.ms + " ms";
+        ? "Mots absents : " + R.spec.errors.map(esc).join(", ") + ". "
+        : ""}Faites plus court, peut-être.</p>`;
+    $("#status").textContent = "Résultat, zéro... · " + R.ms + " ms";
     return;
   }    renderFacets(R);
     await renderResults(R);
