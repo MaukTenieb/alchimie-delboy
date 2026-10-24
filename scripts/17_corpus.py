@@ -19,13 +19,7 @@ ERAS = [("A", "Antiquité grecque"), ("B", "Réception arabe, corpus arabo-latin
         ("C", "Alchimie latine, XIIIe-XVe siècle"), ("D", "XVIe-XIXe siècle")]
 LISTES = {"calvet": "Calvet", "poisson": "Poisson", "pereira": "Pereira", "bonardel": "Bonardel"}
 
-HEAD = """<h1>Corpus <span class="sub">textes alchimiques libres de droits</span></h1>
-<p class="facts">{n} textes · {c} copies numérisées gratuites · liens contrôlés chaque semaine</p>
-<p class="facts">Listes de départ : Antoine Calvet, <i>L'Alchimie au Moyen Âge</i> (Vrin, 2018) ·
-Albert Poisson, <i>Théories et symboles des alchimistes</i> (1891), introduction ·
-Michela Pereira (dir.), <i>Alchimia. I testi della tradizione occidentale</i> (Mondadori, 2006) ·
-Françoise Bonardel (dir.), <i>Philosopher par le feu</i> (Seuil, 1995).</p>
-<p class="facts">Par texte : éditions anciennes imprimées, copies numérisées des bibliothèques, éditions critiques modernes en référence.</p>
+HEAD = """<h1>Corpus</h1>
 <p><input id="cf" type="search" placeholder="Filtrer : auteur, titre, bibliothèque" aria-label="Filtrer le corpus" style="width:100%;max-width:32rem;padding:.4rem;font:inherit"></p>
 """
 
@@ -78,8 +72,6 @@ def main() -> None:
     n = len(data)
     c = sum(len(t.get("copies") or []) for t in data)
     body = [HEAD.format(n=n, c=f"{c:,}".replace(",", " "))]
-    body.append('<p class="facts">' + " · ".join(
-        f'<a href="#ere-{k}">{E(v)}</a>' for k, v in ERAS) + "</p>")
     for k, v in ERAS:
         rows = [t for t in data if t.get("ere") == k]
         body.append(f'<h2 id="ere-{k}">{E(v)} <span class="dim">({len(rows)})</span></h2>')
