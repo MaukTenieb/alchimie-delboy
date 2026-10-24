@@ -62,8 +62,9 @@ html.dlb-nuit .dlb-search input:focus{box-shadow:0 0 0 3px rgba(232,178,143,.22)
 .dlb-menu button:hover,.dlb-menu a:hover{background:var(--dlb-hov)}
 .dlb-menu a[hidden]{display:none}
 /* écrans moyens : on resserre, l'état enfoncé reste visible */
-@media(max-width:1400px){.dlb-where{display:none}}
-@media(max-width:1260px){.dlb-lab{display:none}.dlb-lb{padding:0 6px}.dlb-xs .dlb-xl{display:none}.dlb-xs{padding:0 9px}}
+@media(max-width:1560px){.dlb-where{display:none}}
+@media(max-width:1480px){.dlb-info span{display:none}.dlb-info{padding:0 8px}}
+@media(max-width:1420px){.dlb-lab{display:none}.dlb-lb{padding:0 6px}.dlb-xs .dlb-xl{display:none}.dlb-xs{padding:0 9px}}
 @media(max-width:1080px){#dlb-zoom,.dlb-home span,.dlb-som span{display:none}.dlb-som{padding:0 7px}}
 
 /* colonne de lecture */
@@ -147,6 +148,9 @@ html.dlb-nuit ::highlight(dlb-note){background-color:rgba(214,170,60,.38);color:
 #dlb-notes .dlb-empty{margin:24px 18px;color:var(--dlb-mute)}
 #dlb-notes footer{display:flex;flex-wrap:wrap;gap:4px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));border-top:1px solid var(--dlb-line)}
 
+/* écran moyen : la recherche passe sur une seconde ligne de la barre */
+@media(min-width:821px) and (max-width:1279px){.dlb-bar{flex-wrap:wrap;height:auto;row-gap:6px;padding:6px 14px}.dlb-search{order:10;flex:1 1 100%}.dlb-tools>.dlb-sep{margin:0 2px}.dlb-home span{display:none}.dlb-tools{margin-left:auto}}
+@media(min-width:821px) and (max-width:960px){.dlb-tools>.dlb-sep,#dlb-col,#dlb-minus,#dlb-plus{display:none}}
 /* téléphone : une liseuse. On feuillette du doigt ; page précédente, sorties et
    page suivante flottent en bas de l'écran, à portée du pouce. */
 @media(max-width:820px){

@@ -341,3 +341,6 @@ body.ui .foot{max-width:72rem; font-size:.75rem; line-height:1.55; color:var(--i
 body.ui .bigsearch button,body.ui .btn{background:var(--ink); border-radius:10px; font-family:var(--sans)}
 @media(max-width:700px){body.ui .toc{columns:1} body.ui main{padding:2rem 1rem}}
 body.ui .toc{background:none;border:0;border-radius:0;padding:0}
+/* recherche lancée : le formulaire s'efface, la barre garde la requête */
+body.has-q main > h1, body.has-q main > .facts, body.has-q #form{display:none}
+body.has-q main{padding-top:1.4rem}

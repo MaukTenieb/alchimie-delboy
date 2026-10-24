@@ -39,6 +39,7 @@
     book: '<path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5zM20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5z"/>',
     menu: '<path d="M4 7h16M4 12h16M4 17h16"/>',
     list: '<path d="M9 6h11M9 12h11M9 18h11M4.5 6h.5M4.5 12h.5M4.5 18h.5"/>',
+    info: '<circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.2"/>',
     say: '<path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/>',
     mark: '<path d="M14.5 4.5l5 5L10 19H5v-5z"/><path d="M12 7l5 5M4 21h16"/>',
     globe: '<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.5 2.6 3.7 5.4 3.7 8.5s-1.2 5.9-3.7 8.5M12 3.5C9.5 6.1 8.3 8.9 8.3 12s1.2 5.9 3.7 8.5"/>'
@@ -61,6 +62,7 @@
   bar.innerHTML =
     '<a class="dlb-home" href="' + BASE + 'index.html">Hervé Delboy <span>alchimie</span></a>' +
     '<a class="dlb-som" href="' + BASE + 'sommaire.html" title="Sommaire, dans l\'ordre du plan de l\'auteur">' + ic("list") + "<span>Sommaire</span></a>" +
+    '<a class="dlb-som dlb-info" href="' + BASE + 'notice.html" title="Le projet, la provenance, les droits">' + ic("info") + "<span>Info</span></a>" +
     '<form class="dlb-search" role="search" action="' + BASE + 'recherche.html">' + ic("loupe") +
       '<input type="search" name="q" placeholder="Rechercher dans le site…" aria-label="Rechercher dans le site (/)" autocomplete="off"></form>' +
     '<span class="dlb-where"><span class="dlb-sec"></span></span>' +
@@ -94,6 +96,12 @@
     "</span>";
 
   function $(id) { return document.getElementById(id); }
+  /* page de recherche : la requête reste dans le champ de la barre */
+  (function () {
+    var q = new URLSearchParams(location.search).get("q");
+    var f = bar.querySelector(".dlb-search input");
+    if (q && f && /recherche\.html$/.test(location.pathname)) f.value = q;
+  })();
   var root = document.documentElement;
   $("dlb-en").href = $("dlb-en2").href =
     "https://translate.google.com/translate?sl=fr&tl=en&u=" + encodeURIComponent(location.href.split("#")[0]);

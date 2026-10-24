@@ -33,11 +33,7 @@ MIN_PX = 120          # une image plus petite est un pictogramme de navigation
 MONTHS = "janvier|février|fevrier|mars|avril|mai|juin|juillet|août|aout|septembre|octobre|novembre|décembre|decembre"
 REV = re.compile(r"(?:revu|révisé|revisé|mis à jour|mise à jour)(?: le)?\s+(\d{1,2}(?:er)?\s+(?:" + MONTHS + r")\s+\d{4})", re.I)
 
-RIGHTS = """<footer class="foot"><p>© Hervé Delboy et ayants droit.
-Site d'origine : perso.club-internet.fr/hdelboy, puis herve.delboy.perso.sfr.fr
-(disparu). Reproduction à des fins de consultation, de recherche et de
-conservation ; aucune exploitation commerciale. Tous droits réservés aux
-auteurs et à leurs ayants droit. <a href="{r}notice.html">Notice</a></p></footer>"""
+RIGHTS = """<footer class="foot"><p>© Hervé Delboy (auteur du fond complet, années 2000). Projet de remise sur pied car ce site reste une perle. Historique : perso.club-internet.fr/hdelboy, puis herve.delboy.perso.sfr.fr. Disparus, éparpillés. Nostalgie... Tout ici, remis en ligne, demeure la propriété d'Hervé Delboy. Site-hommage, le plus complet, le plus opérant possible. Vous connaissez Hervé Delboy ou son entourage ? Je remets tout clé en main : mauktenieb chez Gmail.</p></footer>"""
 
 
 def bar(r: str) -> str:
