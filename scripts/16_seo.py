@@ -4,7 +4,7 @@
   données structurées (schema.org CreativeWork : auteur, section, révision,
   capture d'archive) ; le corps de la page reste intact ;
 - pages de consultation : description, adresse canonique, Open Graph ;
-  écran titre : WebSite et SearchAction ; sommaire : liste des 247 pages ;
+  écran titre : WebSite et SearchAction ; sommaire : liste des 248 pages ;
 - anciennes adresses (renvois) et 404 : noindex ;
 - site/sitemap.xml et site/llms.txt.
 
@@ -113,9 +113,9 @@ def main() -> None:
             urls.append((url, today))
 
     # écran titre
-    desc = ("Le site d'Hervé Delboy sur l'alchimie, années 2000, remis en ligne : 247 pages en dix sections, "
+    desc = ("Le site d'Hervé Delboy sur l'alchimie, années 2000, remis en ligne : 248 pages en dix sections, "
             "dont les Douze Clefs de philosophie, le Mutus Liber, l'Atalanta fugiens, le dictionnaire des "
-            "symboles alchimiques et les traités transcrits ; 3 002 planches, recherche en texte intégral, "
+            "symboles alchimiques et les traités transcrits ; 3 017 planches, recherche en texte intégral, "
             "dix livres PDF.")
     ld = {"@graph": [
         {**SITE_LD, "description": desc, "author": AUTHOR,
@@ -135,7 +135,7 @@ def main() -> None:
     # pages de consultation
     con = {
         "sommaire.html": ("Sommaire — " + NAME,
-                          "Les 247 pages d'Hervé Delboy sur l'alchimie dans l'ordre de son plan, en dix sections : "
+                          "Les 248 pages d'Hervé Delboy sur l'alchimie dans l'ordre de son plan, en dix sections : "
                           "date de révision, caractères, images, capture d'archive, livre PDF de chaque section."),
         "recherche.html": ("Recherche — " + NAME,
                            "Recherche en texte intégral dans les 18 427 passages des pages d'Hervé Delboy sur "
@@ -147,7 +147,7 @@ def main() -> None:
                         "Notice du site d'Hervé Delboy sur l'alchimie : auteur, contenu, adresses d'origine "
                         "(perso.club-internet.fr/hdelboy, herve.delboy.perso.sfr.fr), source, pages manquantes."),
         "lacunes.html": ("Pages manquantes — " + NAME,
-                         "Pages manquantes du site d'Hervé Delboy sur l'alchimie, à retrouver : 34 "
+                         "Pages manquantes du site d'Hervé Delboy sur l'alchimie, à retrouver : 33 "
                          "noms de fichiers. Une copie ou un cache : mauktenieb chez Gmail."),
         "hors-perimetre.html": ("Pages écartées — " + NAME,
                                 "Pages du site d'Hervé Delboy hors alchimie : astrologie, musique, échecs, "
@@ -194,7 +194,7 @@ def main() -> None:
     # llms.txt
     lines = [f"# {NAME}", "",
              "> Le site d'Hervé Delboy sur l'alchimie, années 2000, remis en ligne depuis les captures de la "
-             "Wayback Machine : 247 pages en dix sections, dans l'ordre de son plan. Textes et images : © Hervé Delboy.",
+             "Wayback Machine : 248 pages en dix sections, dans l'ordre de son plan. Textes et images : © Hervé Delboy.",
              "", f"- [Écran titre : La clef du labyrinthe hermétique]({BASE})",
              f"- [Sommaire]({BASE}sommaire.html)", f"- [Recherche]({BASE}recherche.html)",
              f"- [Dictionnaire des symboles alchimiques]({BASE}symboles.html)", f"- [Notice]({BASE}notice.html)", ""]

@@ -5,7 +5,7 @@ https://mauktenieb.github.io/alchimie-delboy/
 
 ## Le site
 
-- Les pages de l'auteur, telles qu'il les a écrites et mises en page : 247 pages en dix sections, dans l'ordre de son plan. L'écran titre reprend sa page « La clef du labyrinthe hermétique ».
+- Les pages de l'auteur, telles qu'il les a écrites et mises en page : 248 pages en dix sections, dans l'ordre de son plan. L'écran titre reprend sa page « La clef du labyrinthe hermétique ».
 - Une barre de lecture en tête de chaque page : sommaire, recherche (touche `/`), page précédente et suivante, taille, police, colonne, modes nuit et noir et blanc, loupe et visionneuse des planches, lecture à voix haute, surlignages et notes, traduction en anglais, PDF et EPUB de la page, PDF de la section.
 - Le sommaire : chaque page avec sa date de révision, ses caractères, ses images, la date et le lien de sa capture.
 - La recherche : 18 427 passages, syntaxe ci-dessous ; un résultat ouvre la page de l'auteur au passage, surligné.
@@ -15,10 +15,10 @@ https://mauktenieb.github.io/alchimie-delboy/
 
 | | |
 |---|---|
-| pages d'alchimie | 247 |
-| pages de l'auteur dans `site/original/` | 249 (avec l'accueil du site et l'accueil Club-Internet de 2002) |
+| pages d'alchimie | 248 |
+| pages de l'auteur dans `site/original/` | 250 (avec l'accueil du site et l'accueil Club-Internet de 2002) |
 | caractères | 27,2 millions |
-| images | 3 002 planches et figures ; 3 106 fichiers, 103 Mo |
+| images | 3 017 planches et figures ; 3 106 fichiers, 103 Mo |
 | passages indexés | 18 427 |
 | mots indexés | 62 580 |
 | entrées du dictionnaire des symboles | 90 |
@@ -32,7 +32,7 @@ https://mauktenieb.github.io/alchimie-delboy/
 | `http://perso.club-internet.fr/hdelboy/` | novembre 1999 – septembre 2009 |
 | `http://herve.delboy.perso.sfr.fr/` | août 2009 – novembre 2016 |
 
-Pages manquantes : 46. Liens du site d'origine, captures vides (page d'erreur de Club-Internet, code HTTP 200) : 6 retrouvées, 6 sous une nouvelle adresse, 34 à retrouver ; liste : `site/lacunes.html`. Une copie, un cache, une sauvegarde : mauktenieb chez Gmail.
+Pages manquantes : 46. Liens du site d'origine, captures vides (page d'erreur de Club-Internet, code HTTP 200) : 7 retrouvées, 6 sous une nouvelle adresse, 33 à retrouver ; liste : `site/lacunes.html`. `gobineau.html` (Esprit Gobineau de Montluisant, le grand portail de Notre-Dame de Paris) : retrouvée le 24 octobre 2026 par [Captures](https://github.com/MaukTenieb/reporhogo/tree/main/captures), capture de la Wayback Machine du 29 septembre 2010 ; 39 de ses images restent sur la Wayback Machine. Une copie, un cache, une sauvegarde : mauktenieb chez Gmail.
 
 | service consulté | résultat |
 |---|---|

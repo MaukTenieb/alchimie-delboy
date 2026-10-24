@@ -15,11 +15,11 @@ spec.loader.exec_module(lec)
 NOTICE = """<h1>Notice</h1>
 <table class="data notice">
 <tr><th>Auteur</th><td>Hervé Delboy</td></tr>
-<tr><th>Contenu</th><td><a href="sommaire.html">247 pages</a> sur l'alchimie, dix sections dans l'ordre de son plan · 3 002 images · dix livres PDF</td></tr>
+<tr><th>Contenu</th><td><a href="sommaire.html">248 pages</a> sur l'alchimie, dix sections dans l'ordre de son plan · 3 017 images · dix livres PDF</td></tr>
 <tr><th>Adresses d'origine</th><td><code>perso.club-internet.fr/hdelboy</code>, 1999-2009 · <code>herve.delboy.perso.sfr.fr</code>, 2009-2016</td></tr>
 <tr><th>Source</th><td>Wayback Machine (Internet Archive), captures de 2001 à 2016 ; Common Crawl, une page</td></tr>
 <tr><th>Pages écartées</th><td><a href="hors-perimetre.html">88</a> : astrologie, musique, échecs, statistiques, pages personnelles</td></tr>
-<tr><th>Pages manquantes</th><td><a href="lacunes.html">34</a>, à retrouver</td></tr>
+<tr><th>Pages manquantes</th><td><a href="lacunes.html">33</a>, à retrouver</td></tr>
 <tr><th>Interventions</th><td>encodage des caractères · liens et images en local · barre de lecture</td></tr>
 </table>
 """
@@ -50,10 +50,9 @@ def main() -> None:
     # titres vides ou répétant le nom du fichier
     b = re.sub(r"<code>([^<]+?)\.html?</code> — (\1|index2|Untitled Document)\s*(?=<|$)", r"<code>\1.htm</code>", b)
     b = re.sub(r"<h2>([^<(]*?)\s*\(\d+\)</h2>", r"<h2>\1</h2>", b)
-    if "gobineau.html" not in b:  # absente de la liste d'origine ; citée par un blog de 2015 (recherchestraditions.blogspot.com)
-        b = re.sub(r'(<h2>(?:Perdues|À retrouver)</h2>\s*<ul class="list mono">)', r'\1<li><code>gobineau.html</code></li>', b, count=1)
+    # gobineau.html, relevée en 2015 par un blog (recherchestraditions.blogspot.com), retrouvée le 24 oct. 2026 (Captures) : site/original/gobineau.html
     # le lecteur garde la seule liste des pages à retrouver
-    ul = re.search(r'(?:<h2>(?:Perdues|À retrouver)</h2>\s*)?(<ul class="list mono">(?:(?!</ul>).)*gobineau(?:(?!</ul>).)*</ul>)', b, re.S).group(1)
+    ul = re.search(r'(?:<h2>(?:Perdues|À retrouver)</h2>\s*)?(<ul class="list mono">.*?</ul>)', b, re.S).group(1)
     n = len(re.findall(r"<li>", ul))
     b = (f'<h1>Pages manquantes <span class="sub">à retrouver — aidez-nous</span></h1>'
          f'<p class="facts">{n} pages : liens du site d\'origine, captures vides (page d\'erreur de Club-Internet, code HTTP 200)</p>'

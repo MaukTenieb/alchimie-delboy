@@ -1,6 +1,6 @@
 # Hervé Delboy — alchimie
 
-> Le site d'Hervé Delboy sur l'alchimie, années 2000, remis en ligne depuis les captures de la Wayback Machine : 247 pages en dix sections, dans l'ordre de son plan. Textes et images : © Hervé Delboy.
+> Le site d'Hervé Delboy sur l'alchimie, années 2000, remis en ligne depuis les captures de la Wayback Machine : 248 pages en dix sections, dans l'ordre de son plan. Textes et images : © Hervé Delboy.
 
 - [Écran titre : La clef du labyrinthe hermétique](https://mauktenieb.github.io/alchimie-delboy/)
 - [Sommaire](https://mauktenieb.github.io/alchimie-delboy/sommaire.html)
@@ -249,6 +249,7 @@
 - [Le Triomphe hermétique Limojon de Saint-Didier](https://mauktenieb.github.io/alchimie-delboy/original/limoj-triomph.html)
 - [Le Trésor des Trésors - Nicolas Grosparmy](https://mauktenieb.github.io/alchimie-delboy/original/tresor-grosparmy.html)
 - [le trésor des trésors de Paracelse](https://mauktenieb.github.io/alchimie-delboy/original/tresor-paracelse.html)
+- [Explication très curieuse des énigmes et figures hiéroglyphiques du grand portail de Notre-Dame de Paris - Esprit Gobineau de Montluisant](https://mauktenieb.github.io/alchimie-delboy/original/gobineau.html)
 - [Le Vrai Livre du Docte Abbé Synesius](https://mauktenieb.github.io/alchimie-delboy/original/synesius.html)
 - [Les Figures hiéroglyphiques attribuées à Nicolas Flamel précédées de : la maison de Nicolas](https://mauktenieb.github.io/alchimie-delboy/original/fig-hier.html)
 - [Lettre aux vrais disciples d'Hermès - Limojon de Saint-Didier](https://mauktenieb.github.io/alchimie-delboy/original/limoj-lettre.html)
