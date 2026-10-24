@@ -49,11 +49,18 @@ site/
                         (réplique d'intro-alchimie, chemins ramenés à la racine)
   original/<slug>.html  les 248 pages de l'auteur, markup archivé ; liens et
                         images rendus locaux ; une barre de lecture en tête
-  barre.js, barre.css   barre de lecture : précédent et suivant dans l'ordre du
-                        plan, taille (60 à 250 %), police, colonne, modes
-                        original, noir et blanc, nuit, loupe et visionneuse des
-                        planches, PDF de la page, EPUB de la page, PDF de la
-                        section ; #passage=<mots> ouvre la page au passage cité
+  barre.js, barre.css   barre de lecture, fixe en haut : Sommaire, recherche
+                        (touche /), précédent et suivant dans l'ordre du plan,
+                        taille (60 à 250 %), police (sérif par défaut),
+                        colonne, modes original, noir et blanc, nuit (par
+                        défaut), loupe et visionneuse des planches, lecture à
+                        voix haute, surlignages et notes (gardés dans le
+                        navigateur, export Markdown), lien de traduction en
+                        anglais (Google Traduction), PDF et EPUB de la page,
+                        PDF de la section ; boutons enfoncés = réglage actif ;
+                        sur téléphone, la page coule à la largeur de l'écran
+                        et se feuillette du doigt ; #passage=<mots> ouvre la
+                        page au passage cité
   sommaire.html         les 247 pages dans l'ordre du plan : révision,
                         caractères, images, date et lien de la capture
   sections/<id>.html    une section du plan, même tableau, PDF de la section
