@@ -32,7 +32,7 @@ https://mauktenieb.github.io/alchimie-delboy/
 | `http://perso.club-internet.fr/hdelboy/` | novembre 1999 – septembre 2009 |
 | `http://herve.delboy.perso.sfr.fr/` | août 2009 – novembre 2016 |
 
-Pages manquantes : 46. Liens du site d'origine, captures vides (page d'erreur de Club-Internet, code HTTP 200) : 7 retrouvées, 6 sous une nouvelle adresse, 33 à retrouver ; liste : `site/lacunes.html`. `gobineau.html` (Esprit Gobineau de Montluisant, le grand portail de Notre-Dame de Paris) : retrouvée le 24 octobre 2026 par [Captures](https://github.com/MaukTenieb/reporhogo/tree/main/captures), capture de la Wayback Machine du 29 septembre 2010 ; 39 de ses images restent sur la Wayback Machine. Une copie, un cache, une sauvegarde : mauktenieb chez Gmail.
+Pages manquantes : 46. Liens du site d'origine, captures vides (page d'erreur de Club-Internet, code HTTP 200) : 7 retrouvées, 6 sous une nouvelle adresse, 21 pages d'alchimie à retrouver (liste : `site/lacunes.html`), 12 hors alchimie, échecs, astrologie et musique, rangées avec les pages écartées (`site/hors-perimetre.html`). `gobineau.html` (Esprit Gobineau de Montluisant, le grand portail de Notre-Dame de Paris) : retrouvée le 24 octobre 2026 par [Captures](https://github.com/MaukTenieb/reporhogo/tree/main/captures), capture de la Wayback Machine du 29 septembre 2010 ; 39 de ses images restent sur la Wayback Machine. Une copie, un cache, une sauvegarde : mauktenieb chez Gmail.
 
 | service consulté | résultat |
 |---|---|
